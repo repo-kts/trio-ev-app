@@ -1,0 +1,72 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: dev
+    container_name: trio_client
+    working_dir: /app/client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app/client
+      - client_node_modules:/app/client/node_modules
+    environment:
+      VITE_API_URL: http://localhost:8001
+    depends_on:
+      - server
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: dev
+    container_name: trio_server
+    working_dir: /app/server
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./server:/app/server
+      - server_node_modules:/app/server/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 8001
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/trio?schema=public
+      JWT_SECRET: dev_change_me_at_least_sixteen_chars
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: http://localhost:5173
+      LOG_LEVEL: debug
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: trio_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: trio
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d trio"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  client_node_modules:
+  server_node_modules:
