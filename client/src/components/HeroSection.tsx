@@ -56,7 +56,7 @@ export function HeroSection() {
                             initial={{ y: '100%', opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                            className="font-heading text-6xl md:text-8xl lg:text-[7rem] font-bold uppercase tracking-tight text-textPrimary leading-none"
+                            className="font-heading text-5xl md:text-7xl lg:text-[5.5rem] font-bold uppercase tracking-tight text-textPrimary leading-none"
                         >
                             {word}
                         </motion.span>

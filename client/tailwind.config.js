@@ -10,7 +10,7 @@ export default {
                 textPrimary: '#F4F5F6',
             },
             fontFamily: {
-                heading: ['Anton', 'sans-serif'],
+                heading: ['Syne', 'sans-serif'],
                 sans: ['Outfit', 'sans-serif'],
             },
         },
