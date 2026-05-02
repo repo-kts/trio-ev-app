@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Leaf, TreePine, Zap, Users, ShieldCheck, TrendingUp, Globe } from 'lucide-react';
+import { TreePine, Zap, Users, ShieldCheck, TrendingUp } from 'lucide-react';
 
 export function About() {
     return (

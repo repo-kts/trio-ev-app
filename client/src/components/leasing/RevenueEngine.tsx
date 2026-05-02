@@ -1,37 +1,20 @@
-import { motion, useAnimationFrame } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const nodes = [
-    { id: 'capital',    label: 'Capital',     sub: 'Client Investment',   col: 0 },
-    { id: 'fleet',      label: 'Fleet',       sub: 'EV Vehicles',         col: 1 },
-    { id: 'ops',        label: 'Operations',  sub: 'Deploy & Run',        col: 2 },
-    { id: 'revenue',    label: 'Revenue',     sub: 'Daily Earnings',      col: 3 },
-    { id: 'returns',    label: 'Returns',     sub: 'Client Profit Share', col: 4 },
+    { id: 'capital', label: 'Capital', sub: 'Client Investment', col: 0 },
+    { id: 'fleet', label: 'Fleet', sub: 'EV Vehicles', col: 1 },
+    { id: 'ops', label: 'Operations', sub: 'Deploy & Run', col: 2 },
+    { id: 'revenue', label: 'Revenue', sub: 'Daily Earnings', col: 3 },
+    { id: 'returns', label: 'Returns', sub: 'Client Profit Share', col: 4 },
 ];
 
 const stats = [
     { label: 'Avg. Daily Revenue / Vehicle', value: '₹2,400' },
-    { label: 'Fleet Utilisation Rate',       value: '87%'    },
-    { label: 'Avg. Annual ROI',              value: '18–24%' },
-    { label: 'Capital Recovery Period',      value: '28 mo'  },
+    { label: 'Fleet Utilisation Rate', value: '87%' },
+    { label: 'Avg. Annual ROI', value: '18–24%' },
+    { label: 'Capital Recovery Period', value: '28 mo' },
 ];
 
-// Animated counter
-function Counter({ target, prefix = '', suffix = '' }: { target: number; prefix?: string; suffix?: string }) {
-    const [display, setDisplay] = useState(0);
-    const startRef = useRef<number | null>(null);
-    const duration = 1800;
-
-    useAnimationFrame((t) => {
-        if (startRef.current === null) startRef.current = t;
-        const elapsed = t - startRef.current;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        setDisplay(Math.round(eased * target));
-    });
-
-    return <span>{prefix}{display.toLocaleString()}{suffix}</span>;
-}
 
 export function RevenueEngine() {
     return (
@@ -85,8 +68,8 @@ export function RevenueEngine() {
                                     ${node.id === 'returns'
                                         ? 'bg-accent border-accent text-background'
                                         : node.id === 'capital'
-                                        ? 'bg-secondary border-accent/30 text-textPrimary'
-                                        : 'bg-secondary/40 border-white/8 text-textPrimary hover:border-accent/30'
+                                            ? 'bg-secondary border-accent/30 text-textPrimary'
+                                            : 'bg-secondary/40 border-white/8 text-textPrimary hover:border-accent/30'
                                     }
                                 `}
                             >

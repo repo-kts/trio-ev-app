@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { ShieldCheck, Eye, Zap, Bell, CheckCircle } from 'lucide-react';
 
 export function SafetyEcosystem() {

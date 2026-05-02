@@ -1,4 +1,4 @@
-import { Globe, Mail, MessageCircle, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Footer() {

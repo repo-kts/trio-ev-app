@@ -3,7 +3,6 @@ import { LeasingHero } from '../components/leasing/LeasingHero';
 import { ValuePropSection } from '../components/leasing/ValuePropSection';
 import { RevenueEngine } from '../components/leasing/RevenueEngine';
 import { InvestorBenefits } from '../components/leasing/InvestorBenefits';
-import { InteractiveCalculator } from '../components/leasing/InteractiveCalculator';
 import { EarningsSimulator } from '../components/leasing/EarningsSimulator';
 import { FleetGrowthVisual } from '../components/leasing/FleetGrowthVisual';
 import { FleetUseCases } from '../components/leasing/FleetUseCases';

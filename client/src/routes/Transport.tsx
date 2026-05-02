@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
-import { TransportHero }              from '../components/transport/TransportHero';
-import { FleetUtilizationModel }      from '../components/transport/FleetUtilizationModel';
-import { SmartNetworkVisual }         from '../components/transport/SmartNetworkVisual';
-import { AdminDashboardSim }          from '../components/transport/AdminDashboardSim';
-import { EfficiencyDashboard }        from '../components/transport/EfficiencyDashboard';
-import { WhyCompaniesChoose }         from '../components/transport/WhyCompaniesChoose';
-import { TransportFeatures }          from '../components/transport/TransportFeatures';
-import { SafetyEcosystem }          from '../components/transport/SafetyEcosystem';
-import { TransportCaseStudy }         from '../components/transport/TransportCaseStudy';
+import { TransportHero } from '../components/transport/TransportHero';
+import { FleetUtilizationModel } from '../components/transport/FleetUtilizationModel';
+import { SmartNetworkVisual } from '../components/transport/SmartNetworkVisual';
+import { AdminDashboardSim } from '../components/transport/AdminDashboardSim';
+import { EfficiencyDashboard } from '../components/transport/EfficiencyDashboard';
+import { WhyCompaniesChoose } from '../components/transport/WhyCompaniesChoose';
+import { TransportFeatures } from '../components/transport/TransportFeatures';
+import { SafetyEcosystem } from '../components/transport/SafetyEcosystem';
+import { TransportCaseStudy } from '../components/transport/TransportCaseStudy';
 
 export function Transport() {
     return (
