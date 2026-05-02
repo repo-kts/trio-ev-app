@@ -6,7 +6,7 @@ import {
     inquiryNoteCreateSchema,
     inquiryUpdateSchema,
     publicInquirySubmitSchema,
-} from './inquiry.schema';
+} from './inquiry.schema.js';
 import {
     addNoteHandler,
     countsHandler,
@@ -16,7 +16,7 @@ import {
     statsHandler,
     submitPublicHandler,
     updateHandler,
-} from './inquiry.controller';
+} from './inquiry.controller.js';
 
 const submitLimiter = rateLimit({
     windowMs: 60_000,

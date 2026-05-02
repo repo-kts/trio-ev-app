@@ -2,14 +2,14 @@ import { Router } from 'express';
 import { validate } from '@/middleware/validate';
 import { requireAuth } from '@/middleware/auth';
 import { issueCsrfToken } from '@/middleware/csrf';
-import { loginSchema, registerSchema } from './auth.schema';
+import { loginSchema, registerSchema } from './auth.schema.js';
 import {
     csrfHandler,
     loginHandler,
     logoutHandler,
     meHandler,
     registerHandler,
-} from './auth.controller';
+} from './auth.controller.js';
 
 export const authRouter: Router = Router();
 

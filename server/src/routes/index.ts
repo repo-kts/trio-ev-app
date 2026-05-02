@@ -14,6 +14,10 @@ import { requireCsrf } from '@/middleware/csrf';
 
 export const apiRouter: Router = Router();
 
+apiRouter.get('/health', (_req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
+});
+
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/inquiries', inquiryPublicRouter);
 apiRouter.use('/blog', blogPublicRouter);

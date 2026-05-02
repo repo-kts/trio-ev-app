@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { validate } from '@/middleware/validate';
-import * as usersService from './users.service';
+import * as usersService from './users.service.js';
 
 const listQuerySchema = z.object({
     role: z.enum(['USER', 'ADMIN']).optional(),

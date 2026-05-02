@@ -6,7 +6,7 @@ import type {
     InquiryNoteCreateInput,
     InquiryUpdateInput,
     PublicInquirySubmitInput,
-} from './inquiry.schema';
+} from './inquiry.schema.js';
 
 const inquirySelect = {
     id: true,

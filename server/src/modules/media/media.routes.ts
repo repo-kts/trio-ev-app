@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { deleteHandler, listHandler, uploadHandler } from './media.controller';
+import { deleteHandler, listHandler, uploadHandler } from './media.controller.js';
 
 const upload = multer({
     storage: multer.memoryStorage(),

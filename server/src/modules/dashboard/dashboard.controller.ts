@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import * as dashboardService from './dashboard.service';
+import * as dashboardService from './dashboard.service.js';
 
 export const overviewHandler: RequestHandler = async (_req, res, next) => {
     try {

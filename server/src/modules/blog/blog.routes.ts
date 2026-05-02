@@ -8,9 +8,9 @@ import {
     tagUpsertSchema,
 } from '@trio/shared/blog';
 import { validate } from '@/middleware/validate';
-import * as categoryService from './category.service';
-import * as tagService from './tag.service';
-import * as postService from './post.service';
+import * as categoryService from './category.service.js';
+import * as tagService from './tag.service.js';
+import * as postService from './post.service.js';
 
 export const blogAdminRouter: Router = Router();
 

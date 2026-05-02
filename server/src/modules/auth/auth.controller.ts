@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
-import * as authService from './auth.service';
-import type { LoginInput, RegisterInput } from './auth.schema';
+import * as authService from './auth.service.js';
+import type { LoginInput, RegisterInput } from './auth.schema.js';
 import { ADMIN_SESSION_COOKIE } from '@/middleware/auth';
 import { env } from '@/config/env';
 

@@ -3,9 +3,14 @@
     "version": "0.1.0",
     "private": true,
     "type": "module",
+    "engines": {
+        "node": "20.x"
+    },
     "scripts": {
         "dev": "bun --watch src/index.ts",
         "build": "tsc --noEmit",
+        "bundle": "bun build src/index.ts --outfile dist/index.js --target node --format esm --external sharp --external @prisma/client --external .prisma/client --external @aws-sdk/client-s3 --external @aws-sdk/s3-request-presigner --external bcryptjs",
+        "vercel-build": "prisma generate && bun run bundle",
         "start": "NODE_ENV=production bun src/index.ts",
         "lint": "eslint .",
         "typecheck": "tsc --noEmit",

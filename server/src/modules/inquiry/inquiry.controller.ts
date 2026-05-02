@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express';
-import * as inquiryService from './inquiry.service';
+import * as inquiryService from './inquiry.service.js';
 import type {
     InquiryListQuery,
     InquiryNoteCreateInput,
     InquiryUpdateInput,
     PublicInquirySubmitInput,
-} from './inquiry.schema';
+} from './inquiry.schema.js';
 
 export const submitPublicHandler: RequestHandler<unknown, unknown, PublicInquirySubmitInput> =
     async (req, res, next) => {
