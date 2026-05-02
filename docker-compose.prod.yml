@@ -24,12 +24,27 @@ services:
     environment: {}
     restart: unless-stopped
 
+  admin:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8001}
+    command: ["nginx", "-g", "daemon off;"]
+    working_dir: /
+    ports:
+      - "${ADMIN_PORT:-81}:80"
+    volumes: []
+    environment: {}
+    restart: unless-stopped
+
   server:
     build:
       context: .
       dockerfile: server/Dockerfile
       target: prod
-    command: ["bun", "dist/index.js"]
+    command: ["bun", "src/index.ts"]
     working_dir: /app/server
     volumes: []
     environment:
@@ -40,6 +55,11 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      S3_REGION: ${S3_REGION:?S3_REGION is required}
+      S3_BUCKET: ${S3_BUCKET:?S3_BUCKET is required}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?S3_ACCESS_KEY_ID is required}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?S3_SECRET_ACCESS_KEY is required}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
     restart: unless-stopped
 
   db:

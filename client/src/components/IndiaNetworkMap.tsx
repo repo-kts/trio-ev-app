@@ -1,21 +1,10 @@
 import { motion } from 'framer-motion';
-import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-
-const geoUrl = "/india.json";
 
 const stats = [
     { label: "Vehicles", value: "5000+" },
     { label: "Users", value: "20000+" },
     { label: "Cities", value: "20+" },
     { label: "Growth", value: "Rapid" }
-];
-
-const cities = [
-    { name: "Delhi", coordinates: [77.2090, 28.6139] },
-    { name: "Mumbai", coordinates: [72.8777, 19.0760] },
-    { name: "Bangalore", coordinates: [77.5946, 12.9716] },
-    { name: "Hyderabad", coordinates: [78.4867, 17.3850] },
-    { name: "Chennai", coordinates: [80.2707, 13.0827] }
 ];
 
 export function IndiaNetworkMap() {

@@ -1,9 +1,11 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
+import type { Role } from '@trio/shared/auth';
 import { env } from '@/config/env';
 
 export type JwtPayload = {
     sub: string;
     email: string;
+    role: Role;
 };
 
 export function signToken(payload: JwtPayload, options?: SignOptions) {

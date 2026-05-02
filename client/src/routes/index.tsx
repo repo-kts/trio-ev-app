@@ -8,6 +8,9 @@ import { PrivacyPolicy } from './PrivacyPolicy';
 import { TermsConditions } from './TermsConditions';
 import { RefundPolicy } from './RefundPolicy';
 import { About } from './About';
+import { Contact } from './Contact';
+import { Blog } from './Blog';
+import { BlogPost } from './BlogPost';
 import { NotFound } from './NotFound';
 
 export const router = createBrowserRouter([
@@ -23,6 +26,9 @@ export const router = createBrowserRouter([
             { path: 'terms-conditions', element: <TermsConditions /> },
             { path: 'refund-policy', element: <RefundPolicy /> },
             { path: 'about', element: <About /> },
+            { path: 'contact', element: <Contact /> },
+            { path: 'blog', element: <Blog /> },
+            { path: 'blog/:slug', element: <BlogPost /> },
             { path: '*', element: <NotFound /> },
         ],
     },

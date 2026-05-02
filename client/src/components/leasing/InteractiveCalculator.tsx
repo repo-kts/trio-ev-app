@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { motion, useSpring } from 'framer-motion';
+import { useSpring } from 'framer-motion';
 
 export function InteractiveCalculator() {
     const [fleetSize, setFleetSize] = useState(5);
     const [duration, setDuration] = useState(24);
-    
+
     const cost = fleetSize * 450;
     const savings = fleetSize * 800 * (duration / 12);
 
@@ -14,7 +14,7 @@ export function InteractiveCalculator() {
     useEffect(() => {
         springCost.set(cost);
         springSavings.set(savings);
-    }, [cost, savings]);
+    }, [cost, savings, springCost, springSavings]);
 
     return (
         <section className="py-24 px-6 md:px-12 bg-secondary/5 relative overflow-hidden">
