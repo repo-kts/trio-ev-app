@@ -11,12 +11,24 @@ declare global {
     }
 }
 
-export const requireAuth: RequestHandler = (req, _res, next) => {
+export const ADMIN_SESSION_COOKIE = 'admin_session';
+
+function readToken(req: Parameters<RequestHandler>[0]): string | null {
+    const cookieToken = req.cookies?.[ADMIN_SESSION_COOKIE];
+    if (typeof cookieToken === 'string' && cookieToken.length > 0) return cookieToken;
+
     const header = req.headers.authorization;
-    if (!header?.startsWith('Bearer ')) return next(unauthorized('Missing bearer token'));
+    if (header?.startsWith('Bearer ')) return header.slice(7);
+
+    return null;
+}
+
+export const requireAuth: RequestHandler = (req, _res, next) => {
+    const token = readToken(req);
+    if (!token) return next(unauthorized('Missing authentication'));
 
     try {
-        req.user = verifyToken(header.slice(7));
+        req.user = verifyToken(token);
         next();
     } catch {
         next(unauthorized('Invalid or expired token'));

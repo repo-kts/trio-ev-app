@@ -24,12 +24,27 @@ services:
     environment: {}
     restart: unless-stopped
 
+  admin:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8001}
+    command: ["nginx", "-g", "daemon off;"]
+    working_dir: /
+    ports:
+      - "${ADMIN_PORT:-81}:80"
+    volumes: []
+    environment: {}
+    restart: unless-stopped
+
   server:
     build:
       context: .
       dockerfile: server/Dockerfile
       target: prod
-    command: ["bun", "dist/index.js"]
+    command: ["bun", "src/index.ts"]
     working_dir: /app/server
     volumes: []
     environment:

@@ -7,13 +7,155 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+enum InquiryStatus {
+  NEW
+  IN_REVIEW
+  RESPONDED
+  CLOSED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  FILE
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String        @id @default(cuid())
+  email              String        @unique
+  password           String
+  name               String?
+  role               Role          @default(USER)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  assignedInquiries  Inquiry[]     @relation("InquiryAssignee")
+  authoredNotes      InquiryNote[] @relation("InquiryNoteAuthor")
+  posts              Post[]        @relation("PostAuthor")
+  uploadedMedia      Media[]       @relation("MediaUploader")
 
   @@map("users")
+}
+
+model Inquiry {
+  id           String        @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  subject      String
+  message      String
+  status       InquiryStatus @default(NEW)
+  source       String?
+  assignedTo   User?         @relation("InquiryAssignee", fields: [assignedToId], references: [id])
+  assignedToId String?
+  notes        InquiryNote[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([assignedToId])
+  @@map("inquiries")
+}
+
+model InquiryNote {
+  id         String   @id @default(cuid())
+  inquiry    Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  inquiryId  String
+  author     User     @relation("InquiryNoteAuthor", fields: [authorId], references: [id])
+  authorId   String
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([inquiryId, createdAt])
+  @@map("inquiry_notes")
+}
+
+model Media {
+  id            String    @id @default(cuid())
+  kind          MediaKind
+  originalKey   String
+  thumbKey      String?
+  variants      Json      @default("[]")
+  mime          String
+  size          Int
+  width         Int?
+  height        Int?
+  duration      Int?
+  alt           String?
+  uploadedBy    User      @relation("MediaUploader", fields: [uploadedById], references: [id])
+  uploadedById  String
+  postsAsCover  Post[]    @relation("PostCover")
+  createdAt     DateTime  @default(now())
+
+  @@index([kind, createdAt(sort: Desc)])
+  @@map("media")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  posts     Post[]
+  createdAt DateTime @default(now())
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  posts     PostTag[]
+  createdAt DateTime   @default(now())
+
+  @@map("tags")
+}
+
+model Post {
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  title           String
+  excerpt         String?
+  content         Json       @default("{}")
+  status          PostStatus @default(DRAFT)
+  coverMedia      Media?     @relation("PostCover", fields: [coverMediaId], references: [id])
+  coverMediaId    String?
+  author          User       @relation("PostAuthor", fields: [authorId], references: [id])
+  authorId        String
+  category        Category?  @relation(fields: [categoryId], references: [id])
+  categoryId      String?
+  tags            PostTag[]
+  publishedAt     DateTime?
+  scheduledFor    DateTime?
+  seoTitle        String?
+  seoDescription  String?
+  readingMinutes  Int        @default(1)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([categoryId, publishedAt(sort: Desc)])
+  @@map("posts")
+}
+
+model PostTag {
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId  String
+
+  @@id([postId, tagId])
+  @@index([tagId])
+  @@map("post_tags")
 }

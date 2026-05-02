@@ -6,7 +6,15 @@ const schema = z.object({
     DATABASE_URL: z.string().url(),
     JWT_SECRET: z.string().min(16, 'JWT_SECRET must be at least 16 chars'),
     JWT_EXPIRES_IN: z.string().default('7d'),
-    CORS_ORIGIN: z.string().default('http://localhost:5173'),
+    CORS_ORIGIN: z
+        .string()
+        .default('http://localhost:5173')
+        .transform((s) =>
+            s
+                .split(',')
+                .map((o) => o.trim())
+                .filter(Boolean),
+        ),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 

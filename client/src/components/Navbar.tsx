@@ -15,11 +15,15 @@ export function Navbar() {
                 <Link to="/rentals" className="hover:text-accent transition-colors">Rentals</Link>
                 <Link to="/leasing" className="hover:text-accent transition-colors">Leasing</Link>
                 <Link to="/transport" className="hover:text-accent transition-colors">Transportation</Link>
+                <Link to="/blog" className="hover:text-accent transition-colors">Blog</Link>
                 <a href="#features" className="hover:text-accent transition-colors">About us</a>
             </nav>
-            <button className="hidden md:block px-6 py-2 bg-accent text-background font-semibold rounded-full hover:bg-accent/90 transition-colors">
+            <Link
+                to="/contact"
+                className="hidden md:block px-6 py-2 bg-accent text-background font-semibold rounded-full hover:bg-accent/90 transition-colors"
+            >
                 Contact Sales
-            </button>
+            </Link>
         </motion.header>
     );
 }

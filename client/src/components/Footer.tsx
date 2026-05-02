@@ -1,4 +1,4 @@
-import { Globe, Mail, MessageCircle, Zap } from 'lucide-react';
+import { Globe, Mail, MessageCircle } from 'lucide-react';
 
 export function Footer() {
     return (

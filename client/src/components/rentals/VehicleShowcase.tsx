@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Battery, Zap, Timer, Check, Info, ArrowRight, X } from 'lucide-react';
+import { Battery, Zap, Info, ArrowRight, X } from 'lucide-react';
 
 const vehicles = [
     { 

@@ -11,3 +11,5 @@ build
 coverage
 .bun
 bun.lockb.bak
+.claude/
+server/storage/uploads/

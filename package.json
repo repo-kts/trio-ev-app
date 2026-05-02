@@ -3,15 +3,18 @@
     "version": "0.1.0",
     "private": true,
     "workspaces": [
+        "shared",
         "client",
+        "admin",
         "server"
     ],
     "scripts": {
         "dev": "bun run --filter '*' dev",
         "dev:client": "bun --cwd client run dev",
+        "dev:admin": "bun --cwd admin run dev",
         "dev:server": "bun --cwd server run dev",
-        "build": "bun --cwd client run build && bun --cwd server run build",
-        "lint": "bun --cwd client run lint && bun --cwd server run lint",
+        "build": "bun --cwd client run build && bun --cwd admin run build && bun --cwd server run build",
+        "lint": "bun --cwd client run lint && bun --cwd admin run lint && bun --cwd server run lint",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
         "docker:up": "docker compose up -d",
         "docker:down": "docker compose down",

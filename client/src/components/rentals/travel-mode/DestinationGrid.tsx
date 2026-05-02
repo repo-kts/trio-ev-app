@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Navigation, Battery, ChevronRight, X, Calendar } from 'lucide-react';
+import { Navigation, Battery, ChevronRight, X, Calendar } from 'lucide-react';
 
 const destinations = [
     {

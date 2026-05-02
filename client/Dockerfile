@@ -22,7 +22,9 @@ RUN addgroup -g 1001 -S app \
 ###########################
 FROM base AS deps
 COPY package.json bun.lock ./
+COPY shared/package.json ./shared/package.json
 COPY client/package.json ./client/package.json
+COPY admin/package.json ./admin/package.json
 COPY server/package.json ./server/package.json
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --frozen-lockfile
@@ -42,10 +44,12 @@ CMD ["sh", "-c", "bun install && bun run dev --host 0.0.0.0"]
 # Build (static assets)   #
 ###########################
 FROM deps AS build
-WORKDIR /app/client
+WORKDIR /app
 ARG VITE_API_URL=http://localhost:8001
 ENV VITE_API_URL=${VITE_API_URL}
-COPY client ./
+COPY shared ./shared
+COPY client ./client
+WORKDIR /app/client
 RUN bun run build
 
 ###########################
