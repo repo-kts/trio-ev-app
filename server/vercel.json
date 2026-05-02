@@ -2,7 +2,7 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": null,
     "installCommand": "cd .. && bun install --frozen-lockfile",
-    "buildCommand": "mkdir -p public && printf '<!doctype html><title>API</title><p>API only. See <a href=/health>/health</a>.</p>' > public/index.html && cd .. && bun --cwd server run db:generate",
+    "buildCommand": "mkdir -p public && printf '<!doctype html><title>API</title><p>API only. See <a href=/health>/health</a>.</p>' > public/index.html && cd .. && bun --cwd server run db:generate && bun build server/src/index.ts --outfile server/dist/index.js --target node --format esm --external sharp --external '@prisma/client' --external '.prisma/client' --external '@aws-sdk/client-s3' --external '@aws-sdk/s3-request-presigner' --external bcryptjs",
     "outputDirectory": "public",
     "functions": {
         "api/index.ts": {
