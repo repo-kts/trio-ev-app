@@ -31,7 +31,7 @@ export function ServicesSection() {
                 viewport={{ once: true, margin: "-100px" }}
                 className="text-center mb-16"
             >
-                <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4 text-textPrimary">Our Mobility Services</h2>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase tracking-tight mb-4 text-textPrimary">Our Mobility Services</h2>
                 <p className="text-textPrimary/60 max-w-2xl mx-auto text-lg">Comprehensive electric mobility solutions tailored for every journey.</p>
             </motion.div>
 
@@ -56,7 +56,7 @@ export function ServicesSection() {
                             <service.icon size={28} />
                         </div>
                         
-                        <h3 className="text-2xl font-heading font-bold mb-3 text-textPrimary group-hover:text-accent transition-colors duration-300">{service.title}</h3>
+                        <h3 className="text-2xl font-heading font-bold uppercase tracking-tight mb-3 text-textPrimary group-hover:text-accent transition-colors duration-300">{service.title}</h3>
                         <p className="text-textPrimary/70 mb-8 font-sans">{service.description}</p>
                         
                         <ul className="space-y-3">

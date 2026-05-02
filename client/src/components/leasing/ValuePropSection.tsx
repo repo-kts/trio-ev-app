@@ -46,40 +46,6 @@ export function ValuePropSection() {
                 ))}
             </div>
 
-            {/* Comparison vs Petrol */}
-            <div className="mt-24 p-12 rounded-[3rem] bg-secondary/10 border border-white/5 flex flex-col lg:flex-row gap-16 items-center">
-                <div className="flex-1 space-y-6">
-                    <h2 className="text-3xl font-heading font-black uppercase">The <span className="text-accent">Efficiency</span> Gap</h2>
-                    <p className="text-textPrimary/60 max-w-md italic text-sm">Real-world performance comparison between Trio EV fleets and traditional ICE vehicles.</p>
-                    <div className="space-y-8">
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1">
-                                <span>Trio EV Fleet</span>
-                                <span className="text-accent">$0.04 / mi</span>
-                            </div>
-                            <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} whileInView={{ width: '25%' }} className="h-full bg-accent" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1">
-                                <span>Traditional ICE Fleet</span>
-                                <span className="text-red-400">$0.18 / mi</span>
-                            </div>
-                            <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} className="h-full bg-red-400/50" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 w-full flex justify-center">
-                    <div className="w-full max-w-sm aspect-square rounded-[3rem] border border-accent/20 bg-accent/5 flex flex-col items-center justify-center p-10 text-center">
-                        <div className="text-6xl font-heading font-black text-accent mb-2">78%</div>
-                        <div className="text-xs font-bold uppercase tracking-widest text-textPrimary/60">Average Monthly Savings</div>
-                        <p className="mt-6 text-[10px] text-textPrimary/40">Calculated based on a 10-vehicle fleet over 36 months.</p>
-                    </div>
-                </div>
-            </div>
         </section>
     );
 }
