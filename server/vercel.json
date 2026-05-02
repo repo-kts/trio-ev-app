@@ -2,7 +2,8 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": null,
     "installCommand": "cd .. && bun install --frozen-lockfile",
-    "buildCommand": "cd .. && bun --cwd server run db:generate",
+    "buildCommand": "mkdir -p public && cd .. && bun --cwd server run db:generate",
+    "outputDirectory": "public",
     "functions": {
         "api/index.ts": {
             "runtime": "@vercel/node@3.2.24",
@@ -12,3 +13,4 @@
     },
     "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
 }
+
