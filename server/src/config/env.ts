@@ -31,7 +31,11 @@ const schema = z.object({
 const parsed = schema.safeParse(process.env);
 
 if (!parsed.success) {
-    console.error('Invalid environment variables:', parsed.error.flatten().fieldErrors);
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    console.error('Invalid environment variables:', fieldErrors);
+    if (process.env.VERCEL === '1' || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        throw new Error(`Invalid env: ${JSON.stringify(fieldErrors)}`);
+    }
     process.exit(1);
 }
 
