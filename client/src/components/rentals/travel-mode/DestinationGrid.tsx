@@ -43,10 +43,10 @@ export function DestinationGrid() {
     const selected = destinations.find(d => d.id === selectedId);
 
     return (
-        <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto w-full">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
-                    <h2 className="text-4xl md:text-5xl font-heading font-black uppercase mb-4">Choose Your <span className="text-accent">Destination</span></h2>
+                    <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4">Choose your <span className="text-accent">destination</span></h2>
                     <p className="text-textPrimary/60 max-w-lg">Hand-picked routes optimized for the ultimate electric vehicle experience.</p>
                 </div>
                 <div className="flex gap-4">

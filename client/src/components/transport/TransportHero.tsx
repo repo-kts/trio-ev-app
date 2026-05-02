@@ -21,14 +21,14 @@ export function TransportHero() {
                         <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                             <Network size={16} />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent">System-Driven Mobility</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent">Safe · Reliable · Corporate</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-bold leading-[1] mb-6 text-textPrimary tracking-tight">
-                        Smart Mobility for<br />
-                        <span className="text-accent underline decoration-accent/20 underline-offset-8">Enterprises.</span>
+                    <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1] mb-6 text-textPrimary tracking-tight">
+                        Transport that<br />
+                        <span className="text-accent">puts people first.</span>
                     </h1>
                     <p className="text-base md:text-lg text-textPrimary/60 mb-10 leading-relaxed max-w-md">
-                        Optimize employee transport with intelligent EV fleets and real-time network orchestration.
+                        From corporate commutes to women's late-night safety — Trio provides reliable, EV-powered transport for every journey that matters.
                     </p>
                     
                     <div className="flex flex-wrap gap-4">

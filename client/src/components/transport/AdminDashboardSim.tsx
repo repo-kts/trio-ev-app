@@ -9,7 +9,7 @@ export function AdminDashboardSim() {
 
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="text-center mb-24">
-                    <h2 className="text-3xl md:text-5xl font-bold uppercase mb-4 tracking-tighter">System <span className="text-accent">Orchestration</span></h2>
+                    <h2 className="text-3xl md:text-5xl font-heading uppercase mb-4 tracking-tighter">System <span className="text-accent">Orchestration</span></h2>
                     <p className="text-textPrimary/40 max-w-xl mx-auto text-sm">Real-time telemetry and predictive analytics for your entire corporate fleet.</p>
                 </div>
 
