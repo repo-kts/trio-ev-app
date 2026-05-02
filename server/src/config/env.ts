@@ -33,7 +33,7 @@ const parsed = schema.safeParse(process.env);
 if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;
     console.error('Invalid environment variables:', fieldErrors);
-    if (process.env.VERCEL === '1' || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    if (process.env.VERCEL === '1') {
         throw new Error(`Invalid env: ${JSON.stringify(fieldErrors)}`);
     }
     process.exit(1);
