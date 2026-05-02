@@ -9,10 +9,11 @@ export const CSRF_HEADER = 'x-csrf-token';
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 function cookieOptions() {
+    const isProd = env.NODE_ENV === 'production';
     return {
         httpOnly: false,
-        secure: env.NODE_ENV === 'production',
-        sameSite: 'strict' as const,
+        secure: isProd,
+        sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
         path: '/',
     };
 }
