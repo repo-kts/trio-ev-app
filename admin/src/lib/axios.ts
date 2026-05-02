@@ -14,24 +14,38 @@ function readCookie(name: string): string | null {
     return match ? decodeURIComponent(match[1]!) : null;
 }
 
-let csrfPrimed = false;
-async function ensureCsrfCookie() {
-    if (csrfPrimed && readCookie(CSRF_COOKIE)) return;
-    if (readCookie(CSRF_COOKIE)) {
-        csrfPrimed = true;
+// Token kept in memory so cross-origin CSRF works even when document.cookie can't
+// read csrf_token (cookie is set on the API origin, page is on admin origin).
+let csrfToken: string | null = null;
+
+async function ensureCsrf(): Promise<void> {
+    if (csrfToken) return;
+    const fromCookie = readCookie(CSRF_COOKIE);
+    if (fromCookie) {
+        csrfToken = fromCookie;
         return;
     }
-    await axios.get(`${api.defaults.baseURL}/api/auth/csrf`, { withCredentials: true });
-    csrfPrimed = true;
+    try {
+        const res = await axios.get(`${api.defaults.baseURL}/api/auth/csrf`, {
+            withCredentials: true,
+        });
+        const data = res.data as { token?: string } | undefined;
+        csrfToken = data?.token ?? readCookie(CSRF_COOKIE) ?? null;
+    } catch {
+        csrfToken = null;
+    }
+}
+
+export function clearCsrfToken() {
+    csrfToken = null;
 }
 
 api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     const method = (config.method ?? 'get').toLowerCase();
     if (MUTATING_METHODS.has(method)) {
-        await ensureCsrfCookie();
-        const token = readCookie(CSRF_COOKIE);
-        if (token) {
-            config.headers.set('x-csrf-token', token);
+        await ensureCsrf();
+        if (csrfToken) {
+            config.headers.set('x-csrf-token', csrfToken);
         }
     }
     return config;
@@ -41,6 +55,7 @@ api.interceptors.response.use(
     (res) => res,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
+            csrfToken = null;
             const path = window.location.pathname;
             if (path !== '/login') {
                 window.location.assign('/login');
