@@ -3,23 +3,23 @@ import { Leaf, TreePine, Zap, Users, ShieldCheck, TrendingUp, Globe } from 'luci
 
 export function About() {
     return (
-        <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="w-full bg-background min-h-screen"
         >
             {/* SECTION 1: HERO */}
             <section className="relative pt-40 pb-32 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent pointer-events-none" />
                 <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-                    <motion.h1 
+                    <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-5xl md:text-7xl font-heading font-bold text-textPrimary mb-6 tracking-tight"
                     >
                         Our Commitment to <span className="text-accent">Communities</span>
                     </motion.h1>
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -34,19 +34,19 @@ export function About() {
             <section className="py-24 px-6 bg-secondary/5">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl"
                         >
-                            <img 
-                                src="/sustainability.png" 
-                                alt="Sustainability" 
+                            <img
+                                src="/sustainability.png"
+                                alt="Sustainability"
                                 className="w-full h-[500px] object-cover"
                             />
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
@@ -65,7 +65,7 @@ export function About() {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-16 items-center flex-row-reverse">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
@@ -99,15 +99,15 @@ export function About() {
                                 Our purpose is clear: to protect nature, reduce pollution, and create a sustainable legacy where clean mobility becomes the heartbeat of modern living.
                             </p>
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             className="order-1 md:order-2 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl"
                         >
-                            <img 
-                                src="/energy.png" 
-                                alt="Energy" 
+                            <img
+                                src="/energy.png"
+                                alt="Energy"
                                 className="w-full h-[600px] object-cover"
                             />
                         </motion.div>
@@ -118,7 +118,7 @@ export function About() {
             {/* SECTION 3: OUR STORY */}
             <section className="py-32 px-6 bg-secondary/10">
                 <div className="max-w-4xl mx-auto">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -138,7 +138,7 @@ export function About() {
                         <p>
                             In 2022, the concept of clean transportation took shape. Starting small in Pune with just two leased vehicles, we tested the market, even driving the cars ourselves to understand a driver's real challenges. Those early months gave us invaluable insights into operations, payment irregularities, and the struggles drivers face daily. From there, we expanded to Kolkata, scaling our fleet and building strong foundations.
                         </p>
-                        
+
                         <div className="py-12 text-center">
                             <h3 className="text-3xl md:text-4xl font-heading font-bold text-accent tracking-tight leading-tight italic">
                                 "We're not just offering transport — we're driving a transition to greener, smarter mobility for all."
@@ -164,7 +164,7 @@ export function About() {
             {/* SECTION 4: LEADERSHIP TEAM */}
             <section className="py-32 px-6 bg-background">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -191,7 +191,7 @@ export function About() {
                                 img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop"
                             }
                         ].map((leader, i) => (
-                            <motion.div 
+                            <motion.div
                                 key={i}
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
@@ -214,7 +214,7 @@ export function About() {
             {/* SECTION 5: OUR IMPACT */}
             <section className="py-32 px-6 bg-secondary/5">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -249,7 +249,7 @@ export function About() {
                                 desc: "Fostering R&D and skill-building programs to empower rural communities in clean tech adoption."
                             }
                         ].map((impact, i) => (
-                            <motion.div 
+                            <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -286,16 +286,16 @@ export function About() {
                     <form className="max-w-2xl mx-auto grid md:grid-cols-2 gap-6 items-end">
                         <div className="space-y-2 text-center md:text-left">
                             <label className="text-sm font-sans font-bold text-textPrimary/80 uppercase tracking-widest block text-center">Full Name</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 placeholder="Enter your full name"
                                 className="w-full bg-secondary/30 border border-white/10 rounded-2xl px-6 py-4 text-textPrimary focus:border-accent outline-none transition-colors text-center"
                             />
                         </div>
                         <div className="space-y-2 text-center md:text-left">
                             <label className="text-sm font-sans font-bold text-textPrimary/80 uppercase tracking-widest block text-center">Email</label>
-                            <input 
-                                type="email" 
+                            <input
+                                type="email"
                                 placeholder="Enter your email"
                                 className="w-full bg-secondary/30 border border-white/10 rounded-2xl px-6 py-4 text-textPrimary focus:border-accent outline-none transition-colors text-center"
                             />
