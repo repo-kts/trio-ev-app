@@ -49,10 +49,6 @@ export const router = createBrowserRouter([
             { path: 'media', element: withSuspense(<MediaLibrary />) },
             { path: 'taxonomy', element: withSuspense(<Taxonomy />) },
             {
-                path: 'users',
-                element: withSuspense(<Placeholder title="Users" />),
-            },
-            {
                 path: 'settings',
                 element: withSuspense(<Placeholder title="Settings" />),
             },

@@ -55,26 +55,28 @@ async function computeOverview() {
     const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const startTwelveMonths = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const start24h = new Date(now.getTime() - DAY);
+    const start48h = new Date(now.getTime() - 2 * DAY);
+    const start30d = new Date(now.getTime() - 30 * DAY);
+    const start60d = new Date(now.getTime() - 60 * DAY);
 
     const [
         totalInquiries,
         prevTotal,
-        newThisMonth,
-        prevNewThisMonth,
         inReview,
         responded,
         prevResponded,
+        dailyVisits,
+        prevDailyVisits,
+        monthlyVisits,
+        prevMonthlyVisits,
         byStatusGroup,
         monthlyRows,
         sourcesGroup,
         recentInquiries,
     ] = await Promise.all([
         prisma.inquiry.count(),
-        prisma.inquiry.count({ where: { createdAt: { lt: new Date(now.getTime() - 30 * DAY) } } }),
-        prisma.inquiry.count({ where: { createdAt: { gte: startMonth } } }),
-        prisma.inquiry.count({
-            where: { createdAt: { gte: startPrevMonth, lt: startMonth } },
-        }),
+        prisma.inquiry.count({ where: { createdAt: { lt: start30d } } }),
         prisma.inquiry.count({ where: { status: 'IN_REVIEW' } }),
         prisma.inquiry.count({
             where: { status: 'RESPONDED', updatedAt: { gte: startMonth } },
@@ -82,6 +84,10 @@ async function computeOverview() {
         prisma.inquiry.count({
             where: { status: 'RESPONDED', updatedAt: { gte: startPrevMonth, lt: startMonth } },
         }),
+        prisma.visit.count({ where: { createdAt: { gte: start24h } } }),
+        prisma.visit.count({ where: { createdAt: { gte: start48h, lt: start24h } } }),
+        prisma.visit.count({ where: { createdAt: { gte: start30d } } }),
+        prisma.visit.count({ where: { createdAt: { gte: start60d, lt: start30d } } }),
         prisma.inquiry.groupBy({
             by: ['status'],
             _count: { _all: true },
@@ -130,8 +136,10 @@ async function computeOverview() {
         kpis: {
             totalInquiries,
             totalDeltaPct: pctDelta(totalInquiries, prevTotal),
-            newThisMonth,
-            newDeltaPct: pctDelta(newThisMonth, prevNewThisMonth),
+            dailyVisits,
+            dailyVisitsDeltaPct: pctDelta(dailyVisits, prevDailyVisits),
+            monthlyVisits,
+            monthlyVisitsDeltaPct: pctDelta(monthlyVisits, prevMonthlyVisits),
             inReview,
             responded,
             respondedDeltaPct: pctDelta(responded, prevResponded),

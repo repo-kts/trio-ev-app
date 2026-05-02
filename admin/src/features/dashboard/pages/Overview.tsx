@@ -1,8 +1,9 @@
 import {
+    Calendar,
     CheckCircle2,
     Clock,
+    Eye,
     MessageSquare,
-    UserPlus,
 } from 'lucide-react';
 import { KpiCard } from '@/components/data/KpiCard';
 import { HeroBanner } from '../components/HeroBanner';
@@ -20,7 +21,7 @@ export default function Overview() {
         <div className='mb-4'>
             <HeroBanner />
 
-            <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 <KpiCard
                     label="Total Inquiries"
                     value={fmt(data?.kpis.totalInquiries)}
@@ -29,11 +30,19 @@ export default function Overview() {
                     iconTone="emerald"
                 />
                 <KpiCard
-                    label="New This Month"
-                    value={fmt(data?.kpis.newThisMonth)}
-                    deltaPct={data?.kpis.newDeltaPct ?? null}
-                    icon={<UserPlus className="h-5 w-5" />}
+                    label="Daily Visits"
+                    value={fmt(data?.kpis.dailyVisits)}
+                    deltaPct={data?.kpis.dailyVisitsDeltaPct ?? null}
+                    icon={<Eye className="h-5 w-5" />}
                     iconTone="blue"
+                    deltaSuffix="vs yesterday"
+                />
+                <KpiCard
+                    label="Monthly Visits"
+                    value={fmt(data?.kpis.monthlyVisits)}
+                    deltaPct={data?.kpis.monthlyVisitsDeltaPct ?? null}
+                    icon={<Calendar className="h-5 w-5" />}
+                    iconTone="violet"
                 />
                 <KpiCard
                     label="In Review"
@@ -47,7 +56,7 @@ export default function Overview() {
                     value={fmt(data?.kpis.responded)}
                     deltaPct={data?.kpis.respondedDeltaPct ?? null}
                     icon={<CheckCircle2 className="h-5 w-5" />}
-                    iconTone="violet"
+                    iconTone="emerald"
                 />
             </div>
 

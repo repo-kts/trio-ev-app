@@ -11,8 +11,11 @@ import { blogAdminRouter, blogPublicRouter } from '@/modules/blog/blog.routes';
 import { requireAuth } from '@/middleware/auth';
 import { requireAdmin } from '@/middleware/requireAdmin';
 import { requireCsrf } from '@/middleware/csrf';
+import { trackVisit } from '@/middleware/trackVisit';
 
 export const apiRouter: Router = Router();
+
+apiRouter.use(trackVisit);
 
 apiRouter.get('/health', (_req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });

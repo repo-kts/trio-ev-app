@@ -4,8 +4,10 @@ import { inquiryStatusSchema, inquirySchema } from './inquiry';
 export const dashboardKpisSchema = z.object({
     totalInquiries: z.number(),
     totalDeltaPct: z.number().nullable(),
-    newThisMonth: z.number(),
-    newDeltaPct: z.number().nullable(),
+    dailyVisits: z.number(),
+    dailyVisitsDeltaPct: z.number().nullable(),
+    monthlyVisits: z.number(),
+    monthlyVisitsDeltaPct: z.number().nullable(),
     inReview: z.number(),
     responded: z.number(),
     respondedDeltaPct: z.number().nullable(),
