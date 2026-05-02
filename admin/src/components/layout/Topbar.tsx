@@ -23,7 +23,7 @@ export function Topbar() {
     const initial = me.data?.name?.[0] ?? me.data?.email?.[0] ?? 'A';
 
     return (
-        <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6">
             <div />
             <div className="flex items-center gap-3">
                 <button
@@ -48,7 +48,7 @@ export function Topbar() {
                         <ChevronDown className="h-4 w-4 text-slate-500" />
                     </button>
                     {open && (
-                        <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+                        <div className="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
                             <div className="border-b border-slate-100 px-3 py-2 text-xs text-slate-500">
                                 {me.data?.email}
                             </div>
