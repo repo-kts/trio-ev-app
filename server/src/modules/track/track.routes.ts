@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
@@ -17,16 +18,24 @@ const trackLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+function makeVisitorId(ip: string, ua: string): string {
+    return crypto.createHash('sha256').update(`${ip}|${ua}`).digest('hex').slice(0, 32);
+}
+
 export const trackRouter: Router = Router();
 
 trackRouter.post('/', trackLimiter, validate(trackBodySchema), (req, res) => {
-    const { path } = req.body as z.infer<typeof trackBodySchema>;
+    const { path, referrer } = req.body as z.infer<typeof trackBodySchema>;
+    const ip = (req.ip ?? '').slice(0, 64) || '';
+    const ua = (req.get('user-agent') ?? '').slice(0, 200) || '';
     prisma.visit
         .create({
             data: {
                 path: path.slice(0, 200),
-                ip: (req.ip ?? '').slice(0, 64) || null,
-                ua: (req.get('user-agent') ?? '').slice(0, 200) || null,
+                ip: ip || null,
+                ua: ua || null,
+                referrer: referrer ? referrer.slice(0, 200) : null,
+                visitorId: ip || ua ? makeVisitorId(ip, ua) : null,
             },
         })
         .catch((err) => logger.warn({ err }, 'track visit failed'));

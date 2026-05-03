@@ -8,7 +8,8 @@ export const dashboardKpisSchema = z.object({
     dailyVisitsDeltaPct: z.number().nullable(),
     monthlyVisits: z.number(),
     monthlyVisitsDeltaPct: z.number().nullable(),
-    inReview: z.number(),
+    uniqueVisitors: z.number(),
+    uniqueVisitorsDeltaPct: z.number().nullable(),
     responded: z.number(),
     respondedDeltaPct: z.number().nullable(),
 });
@@ -29,11 +30,24 @@ export const topSourceItemSchema = z.object({
     count: z.number(),
 });
 
+export const dailyVisitorItemSchema = z.object({
+    day: z.string(),
+    label: z.string(),
+    count: z.number(),
+});
+
+export const topReferrerItemSchema = z.object({
+    referrer: z.string(),
+    count: z.number(),
+});
+
 export const dashboardOverviewSchema = z.object({
     kpis: dashboardKpisSchema,
     byStatus: z.array(statusBreakdownItemSchema),
     monthlyInquiries: z.array(monthlyInquiryItemSchema),
     topSources: z.array(topSourceItemSchema),
+    topReferrers: z.array(topReferrerItemSchema),
+    dailyVisitors: z.array(dailyVisitorItemSchema),
     recentInquiries: z.array(inquirySchema),
 });
 export type DashboardOverview = z.infer<typeof dashboardOverviewSchema>;

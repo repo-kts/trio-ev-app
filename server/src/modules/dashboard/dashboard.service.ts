@@ -63,7 +63,6 @@ async function computeOverview() {
     const [
         totalInquiries,
         prevTotal,
-        inReview,
         responded,
         prevResponded,
         dailyVisits,
@@ -74,10 +73,13 @@ async function computeOverview() {
         monthlyRows,
         sourcesGroup,
         recentInquiries,
+        uniqueDailyRows,
+        uniqueDailyPrevRows,
+        uniqueLast30Rows,
+        referrerGroup,
     ] = await Promise.all([
         prisma.inquiry.count(),
         prisma.inquiry.count({ where: { createdAt: { lt: start30d } } }),
-        prisma.inquiry.count({ where: { status: 'IN_REVIEW' } }),
         prisma.inquiry.count({
             where: { status: 'RESPONDED', updatedAt: { gte: startMonth } },
         }),
@@ -107,6 +109,30 @@ async function computeOverview() {
             orderBy: { createdAt: 'desc' },
             take: 5,
         }),
+        prisma.visit.findMany({
+            where: { createdAt: { gte: start24h }, visitorId: { not: null } },
+            select: { visitorId: true },
+            distinct: ['visitorId'],
+        }),
+        prisma.visit.findMany({
+            where: {
+                createdAt: { gte: start48h, lt: start24h },
+                visitorId: { not: null },
+            },
+            select: { visitorId: true },
+            distinct: ['visitorId'],
+        }),
+        prisma.visit.findMany({
+            where: { createdAt: { gte: start30d } },
+            select: { visitorId: true, createdAt: true },
+        }),
+        prisma.visit.groupBy({
+            by: ['referrer'],
+            where: { createdAt: { gte: start30d }, referrer: { not: null } },
+            _count: { _all: true },
+            orderBy: { _count: { id: 'desc' } },
+            take: 6,
+        }),
     ]);
 
     const byStatus = (['NEW', 'IN_REVIEW', 'RESPONDED', 'CLOSED'] as const).map((status) => ({
@@ -132,6 +158,34 @@ async function computeOverview() {
         count: g._count._all,
     }));
 
+    const topReferrers = referrerGroup.map((g) => ({
+        referrer: domainOf(g.referrer ?? 'direct'),
+        count: g._count._all,
+    }));
+
+    const dailyVisitorBuckets: { key: string; label: string; ids: Set<string> }[] = [];
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date(now.getTime() - i * DAY);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const label = `${MONTH_LABELS[d.getMonth()]} ${d.getDate()}`;
+        dailyVisitorBuckets.push({ key, label, ids: new Set<string>() });
+    }
+    for (const row of uniqueLast30Rows) {
+        if (!row.visitorId) continue;
+        const d = row.createdAt;
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const slot = dailyVisitorBuckets.find((b) => b.key === key);
+        if (slot) slot.ids.add(row.visitorId);
+    }
+    const dailyVisitors = dailyVisitorBuckets.map((b) => ({
+        day: b.key,
+        label: b.label,
+        count: b.ids.size,
+    }));
+
+    const uniqueVisitors = uniqueDailyRows.length;
+    const prevUnique = uniqueDailyPrevRows.length;
+
     return {
         kpis: {
             totalInquiries,
@@ -140,13 +194,26 @@ async function computeOverview() {
             dailyVisitsDeltaPct: pctDelta(dailyVisits, prevDailyVisits),
             monthlyVisits,
             monthlyVisitsDeltaPct: pctDelta(monthlyVisits, prevMonthlyVisits),
-            inReview,
+            uniqueVisitors,
+            uniqueVisitorsDeltaPct: pctDelta(uniqueVisitors, prevUnique),
             responded,
             respondedDeltaPct: pctDelta(responded, prevResponded),
         },
         byStatus,
         monthlyInquiries: monthly.map((m) => ({ month: m.key, label: m.label, count: m.count })),
         topSources,
+        topReferrers,
+        dailyVisitors,
         recentInquiries,
     };
+}
+
+function domainOf(input: string): string {
+    if (!input) return 'direct';
+    try {
+        const u = new URL(input);
+        return u.hostname.replace(/^www\./, '');
+    } catch {
+        return input.slice(0, 80);
+    }
 }

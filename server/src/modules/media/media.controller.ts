@@ -5,13 +5,17 @@ import { badRequest } from '@/utils/http-error';
 export const uploadHandler: RequestHandler = async (req, res, next) => {
     try {
         if (!req.file) throw badRequest('No file uploaded (field name: "file")');
-        const created = await mediaService.uploadImage({
+        const isVideo = req.file.mimetype.startsWith('video/');
+        const payload = {
             buffer: req.file.buffer,
             mimetype: req.file.mimetype,
             originalName: req.file.originalname,
             uploadedById: req.user!.sub,
             alt: typeof req.body?.alt === 'string' ? req.body.alt : null,
-        });
+        };
+        const created = isVideo
+            ? await mediaService.uploadVideo(payload)
+            : await mediaService.uploadImage(payload);
         res.status(201).json(mediaService.shapeMedia(created));
     } catch (err) {
         next(err);

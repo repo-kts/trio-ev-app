@@ -1,15 +1,17 @@
 import {
     Calendar,
     CheckCircle2,
-    Clock,
     Eye,
     MessageSquare,
+    Users,
 } from 'lucide-react';
 import { KpiCard } from '@/components/data/KpiCard';
 import { HeroBanner } from '../components/HeroBanner';
 import { StatusDonut } from '../components/StatusDonut';
 import { MonthlyBar } from '../components/MonthlyBar';
 import { TopSources } from '../components/TopSources';
+import { TopReferrers } from '../components/TopReferrers';
+import { UniqueVisitorsLine } from '../components/UniqueVisitorsLine';
 import { RecentInquiries } from '../components/RecentInquiries';
 import { useDashboardOverviewQuery } from '../hooks';
 
@@ -18,7 +20,7 @@ export default function Overview() {
     const data = query.data;
 
     return (
-        <div className='mb-4'>
+        <div className="mb-4">
             <HeroBanner />
 
             <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -28,6 +30,14 @@ export default function Overview() {
                     deltaPct={data?.kpis.totalDeltaPct ?? null}
                     icon={<MessageSquare className="h-5 w-5" />}
                     iconTone="emerald"
+                />
+                <KpiCard
+                    label="Unique Visitors (24h)"
+                    value={fmt(data?.kpis.uniqueVisitors)}
+                    deltaPct={data?.kpis.uniqueVisitorsDeltaPct ?? null}
+                    icon={<Users className="h-5 w-5" />}
+                    iconTone="amber"
+                    deltaSuffix="vs yesterday"
                 />
                 <KpiCard
                     label="Daily Visits"
@@ -45,19 +55,22 @@ export default function Overview() {
                     iconTone="violet"
                 />
                 <KpiCard
-                    label="In Review"
-                    value={fmt(data?.kpis.inReview)}
-                    icon={<Clock className="h-5 w-5" />}
-                    iconTone="amber"
-                    deltaSuffix="open right now"
-                />
-                <KpiCard
                     label="Responded This Month"
                     value={fmt(data?.kpis.responded)}
                     deltaPct={data?.kpis.respondedDeltaPct ?? null}
                     icon={<CheckCircle2 className="h-5 w-5" />}
                     iconTone="emerald"
                 />
+            </div>
+
+            <div className="mb-6 grid gap-4 lg:grid-cols-3">
+                <div className="lg:col-span-2">
+                    <UniqueVisitorsLine
+                        items={data?.dailyVisitors}
+                        isLoading={query.isLoading}
+                    />
+                </div>
+                <TopReferrers items={data?.topReferrers} isLoading={query.isLoading} />
             </div>
 
             <div className="mb-6 grid gap-4 lg:grid-cols-3">

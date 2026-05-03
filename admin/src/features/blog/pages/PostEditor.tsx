@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import {
     useCategoriesQuery,
     useCreatePostMutation,
+    useCreateTagMutation,
     useDeletePostMutation,
     usePostQuery,
     useSetPostStatusMutation,
@@ -41,7 +42,6 @@ export default function PostEditor() {
     const deleteMutation = useDeletePostMutation();
 
     const categories = useCategoriesQuery();
-    const tags = useTagsQuery();
 
     const [title, setTitle] = useState('');
     const [slug, setSlug] = useState('');
@@ -335,37 +335,13 @@ export default function PostEditor() {
                                 </Select>
                             </FieldLabel>
                             <FieldLabel label="Tags">
-                                <div className="flex flex-wrap gap-1.5">
-                                    {(tags.data ?? []).map((t) => {
-                                        const active = tagIds.includes(t.id);
-                                        return (
-                                            <button
-                                                key={t.id}
-                                                type="button"
-                                                onClick={() => {
-                                                    setTagIds((prev) =>
-                                                        active
-                                                            ? prev.filter((x) => x !== t.id)
-                                                            : [...prev, t.id],
-                                                    );
-                                                    markDirty();
-                                                }}
-                                                className={
-                                                    active
-                                                        ? 'rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700'
-                                                        : 'rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50'
-                                                }
-                                            >
-                                                {t.name}
-                                            </button>
-                                        );
-                                    })}
-                                    {(tags.data ?? []).length === 0 && (
-                                        <span className="text-xs text-slate-400">
-                                            Add tags from Taxonomy
-                                        </span>
-                                    )}
-                                </div>
+                                <TagPicker
+                                    selectedIds={tagIds}
+                                    onChange={(next) => {
+                                        setTagIds(next);
+                                        markDirty();
+                                    }}
+                                />
                             </FieldLabel>
                         </CardBody>
                     </Card>
@@ -548,5 +524,77 @@ function FieldLabel({ label, children }: { label: string; children: React.ReactN
             <span className="text-xs font-medium text-slate-600">{label}</span>
             {children}
         </label>
+    );
+}
+
+function TagPicker({
+    selectedIds,
+    onChange,
+}: {
+    selectedIds: string[];
+    onChange: (next: string[]) => void;
+}) {
+    const tagsQuery = useTagsQuery();
+    const create = useCreateTagMutation();
+    const [draft, setDraft] = useState('');
+    const list = tagsQuery.data ?? [];
+
+    return (
+        <div className="space-y-2">
+            <form
+                className="flex gap-2"
+                onSubmit={async (e) => {
+                    e.preventDefault();
+                    const name = draft.trim();
+                    if (!name) return;
+                    try {
+                        const created = await create.mutateAsync({ name });
+                        setDraft('');
+                        onChange([...selectedIds, created.id]);
+                    } catch {
+                        toast.error('Could not add tag');
+                    }
+                }}
+            >
+                <Input
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    placeholder="Add a new tag and press Enter"
+                />
+                <Button type="submit" size="sm" loading={create.isPending}>
+                    Add
+                </Button>
+            </form>
+            <div className="flex flex-wrap gap-1.5">
+                {list.map((t) => {
+                    const active = selectedIds.includes(t.id);
+                    return (
+                        <button
+                            key={t.id}
+                            type="button"
+                            onClick={() =>
+                                onChange(
+                                    active
+                                        ? selectedIds.filter((x) => x !== t.id)
+                                        : [...selectedIds, t.id],
+                                )
+                            }
+                            className={
+                                active
+                                    ? 'rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700'
+                                    : 'rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50'
+                            }
+                        >
+                            {t.name}
+                        </button>
+                    );
+                })}
+                {list.length === 0 && (
+                    <span className="text-xs text-slate-400">
+                        No tags yet — add one above.
+                    </span>
+                )}
+            </div>
+        </div>
     );
 }

@@ -11,7 +11,9 @@ const InquiryList = lazy(() => import('@/features/inquiry/pages/InquiryList'));
 const PostList = lazy(() => import('@/features/blog/pages/PostList'));
 const PostEditor = lazy(() => import('@/features/blog/pages/PostEditor'));
 const MediaLibrary = lazy(() => import('@/features/blog/pages/MediaLibrary'));
-const Taxonomy = lazy(() => import('@/features/blog/pages/Taxonomy'));
+const CategoryPage = lazy(() => import('@/features/blog/pages/Category'));
+const CarouselManager = lazy(() => import('@/features/carousel/pages/CarouselManager'));
+const NoticeManager = lazy(() => import('@/features/notice/pages/NoticeManager'));
 const Placeholder = lazy(() => import('./Placeholder'));
 
 function PageFallback() {
@@ -47,7 +49,10 @@ export const router = createBrowserRouter([
             { path: 'blog/new', element: withSuspense(<PostEditor />) },
             { path: 'blog/:id', element: withSuspense(<PostEditor />) },
             { path: 'media', element: withSuspense(<MediaLibrary />) },
-            { path: 'taxonomy', element: withSuspense(<Taxonomy />) },
+            { path: 'category', element: withSuspense(<CategoryPage />) },
+            { path: 'taxonomy', element: <Navigate to="/category" replace /> },
+            { path: 'carousel', element: withSuspense(<CarouselManager />) },
+            { path: 'notice', element: withSuspense(<NoticeManager />) },
             {
                 path: 'settings',
                 element: withSuspense(<Placeholder title="Settings" />),
