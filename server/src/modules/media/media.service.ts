@@ -7,6 +7,13 @@ import { badRequest, notFound } from '@/utils/http-error';
 const VARIANTS = [1600, 800, 400] as const;
 const MAX_BYTES = 8 * 1024 * 1024;
 const VIDEO_MAX_BYTES = 64 * 1024 * 1024;
+const ALLOWED_VIDEO_MIME = new Set([
+    'video/mp4',
+    'video/webm',
+    'video/ogg',
+    'video/quicktime',
+    'video/x-matroska',
+]);
 
 interface UploadInput {
     buffer: Buffer;
@@ -90,13 +97,29 @@ export async function uploadImage(input: UploadInput) {
 
 export async function uploadVideo(input: UploadInput) {
     if (!input.mimetype.startsWith('video/')) {
-        throw badRequest('Only video uploads supported here');
+        throw badRequest(`Unsupported file type: ${input.mimetype || 'unknown'}`);
+    }
+    if (!ALLOWED_VIDEO_MIME.has(input.mimetype)) {
+        throw badRequest(
+            `Video format ${input.mimetype} not supported. Allowed: mp4, webm, ogg, mov, mkv`,
+        );
+    }
+    if (input.buffer.length === 0) {
+        throw badRequest('Video file is empty');
     }
     if (input.buffer.length > VIDEO_MAX_BYTES) {
-        throw badRequest('Video larger than 50 MB');
+        const sizeMb = (input.buffer.length / (1024 * 1024)).toFixed(1);
+        const limitMb = (VIDEO_MAX_BYTES / (1024 * 1024)).toFixed(0);
+        throw badRequest(`Video is ${sizeMb} MB; max allowed is ${limitMb} MB`);
     }
     const key = newKey(input.originalName);
-    await putBuffer(key, input.buffer, input.mimetype);
+    try {
+        await putBuffer(key, input.buffer, input.mimetype);
+    } catch (err) {
+        const e = err as { name?: string; message?: string; Code?: string };
+        const detail = e.Code ?? e.name ?? e.message ?? 'unknown';
+        throw badRequest(`Storage upload failed: ${detail}`);
+    }
     return prisma.media.create({
         data: {
             kind: 'VIDEO',

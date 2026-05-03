@@ -1,6 +1,8 @@
 import type { RequestHandler } from 'express';
 import * as mediaService from './media.service.js';
 import { badRequest } from '@/utils/http-error';
+import { logger } from '@/lib/logger';
+import { HttpError } from '@/utils/http-error';
 
 export const uploadHandler: RequestHandler = async (req, res, next) => {
     try {
@@ -18,6 +20,21 @@ export const uploadHandler: RequestHandler = async (req, res, next) => {
             : await mediaService.uploadImage(payload);
         res.status(201).json(mediaService.shapeMedia(created));
     } catch (err) {
+        if (!(err instanceof HttpError)) {
+            logger.error(
+                {
+                    err,
+                    file: req.file
+                        ? {
+                              name: req.file.originalname,
+                              mime: req.file.mimetype,
+                              size: req.file.size,
+                          }
+                        : null,
+                },
+                'media upload failed',
+            );
+        }
         next(err);
     }
 };

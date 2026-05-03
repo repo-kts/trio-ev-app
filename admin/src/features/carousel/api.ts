@@ -41,9 +41,18 @@ export async function reorderSlides(input: SlideReorderInput): Promise<Carousel>
     return data;
 }
 
-export async function uploadVideoFile(file: File): Promise<{ url: string }> {
+export async function uploadVideoFile(
+    file: File,
+    onProgress?: (pct: number) => void,
+): Promise<{ url: string }> {
     const fd = new FormData();
     fd.append('file', file);
-    const { data } = await api.post('/api/admin/media/upload', fd);
+    const { data } = await api.post('/api/admin/media/upload', fd, {
+        timeout: 5 * 60 * 1000,
+        onUploadProgress: (evt) => {
+            if (!onProgress || !evt.total) return;
+            onProgress(Math.round((evt.loaded / evt.total) * 100));
+        },
+    });
     return { url: data.url as string };
 }
