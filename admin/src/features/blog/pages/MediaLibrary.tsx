@@ -13,6 +13,7 @@ import {
 } from '../hooks';
 import { mediaUrl } from '../mediaUrl';
 import { toast } from '@/hooks/useToast';
+import { extractUploadError, preflightFile } from '@/lib/uploadError';
 
 type Filter = 'ALL' | 'IMAGE' | 'VIDEO';
 
@@ -25,16 +26,21 @@ export default function MediaLibrary() {
 
     const handleFiles = async (files: FileList | null) => {
         if (!files) return;
+        let okCount = 0;
         for (const f of Array.from(files)) {
+            const preErr = preflightFile(f);
+            if (preErr) {
+                toast.error(`${f.name}: ${preErr}`);
+                continue;
+            }
             try {
                 await upload.mutateAsync({ file: f });
+                okCount += 1;
             } catch (err) {
-                const e = err as { response?: { data?: { error?: string } } };
-                const msg = e?.response?.data?.error ?? 'Upload failed';
-                toast.error(`${f.name}: ${msg}`);
+                toast.error(`${f.name}: ${extractUploadError(err)}`);
             }
         }
-        toast.success('Upload complete');
+        if (okCount > 0) toast.success(`${okCount} file${okCount === 1 ? '' : 's'} uploaded`);
     };
 
     const items = query.data ?? [];

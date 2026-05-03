@@ -40,6 +40,7 @@ import {
     useUpdateSlideMutation,
 } from '../hooks';
 import { uploadVideoFile } from '../api';
+import { extractUploadError, preflightFile } from '@/lib/uploadError';
 
 const TRANSITIONS: CarouselTransition[] = ['SLIDE', 'FADE'];
 
@@ -377,6 +378,7 @@ function SlideEditor({
     const [durationMs, setDurationMs] = useState<number | ''>(slide?.durationMs ?? '');
     const [pickerOpen, setPickerOpen] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [uploadPct, setUploadPct] = useState(0);
     const fileInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -425,17 +427,23 @@ function SlideEditor({
     };
 
     const handleVideoFile = async (file: File) => {
+        const preErr = preflightFile(file, 'video');
+        if (preErr) {
+            toast.error(preErr);
+            return;
+        }
         try {
             setUploading(true);
-            const { url } = await uploadVideoFile(file);
+            setUploadPct(0);
+            const { url } = await uploadVideoFile(file, setUploadPct);
             setMediaUrlValue(url);
             setKind('VIDEO');
             toast.success('Video uploaded');
         } catch (err) {
-            const e = err as { response?: { data?: { error?: string } } };
-            toast.error(e?.response?.data?.error ?? 'Video upload failed');
+            toast.error(extractUploadError(err));
         } finally {
             setUploading(false);
+            setUploadPct(0);
         }
     };
 
@@ -502,7 +510,7 @@ function SlideEditor({
                                 <input
                                     ref={fileInput}
                                     type="file"
-                                    accept="video/*"
+                                    accept="video/mp4,video/webm,video/ogg,video/quicktime,video/x-matroska"
                                     className="hidden"
                                     onChange={(e) => {
                                         const f = e.target.files?.[0];
@@ -510,6 +518,19 @@ function SlideEditor({
                                         e.target.value = '';
                                     }}
                                 />
+                                {uploading && (
+                                    <div className="flex w-full items-center gap-2">
+                                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+                                            <div
+                                                className="h-full rounded-full bg-emerald-500 transition-all"
+                                                style={{ width: `${uploadPct}%` }}
+                                            />
+                                        </div>
+                                        <span className="w-10 text-right text-xs tabular-nums text-slate-500">
+                                            {uploadPct}%
+                                        </span>
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>

@@ -17,11 +17,21 @@ export async function listMedia(kind?: 'IMAGE' | 'VIDEO' | 'FILE'): Promise<Medi
     return data;
 }
 
-export async function uploadMedia(file: File, alt?: string): Promise<Media> {
+export async function uploadMedia(
+    file: File,
+    alt?: string,
+    onProgress?: (pct: number) => void,
+): Promise<Media> {
     const fd = new FormData();
     fd.append('file', file);
     if (alt) fd.append('alt', alt);
-    const { data } = await api.post('/api/admin/media/upload', fd);
+    const { data } = await api.post('/api/admin/media/upload', fd, {
+        timeout: 5 * 60 * 1000,
+        onUploadProgress: (evt) => {
+            if (!onProgress || !evt.total) return;
+            onProgress(Math.round((evt.loaded / evt.total) * 100));
+        },
+    });
     return data;
 }
 
