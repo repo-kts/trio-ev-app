@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Loader2, Save, Image as ImageIcon, X } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Save, Image as ImageIcon, X } from 'lucide-react';
 import type { Notice, NoticeFrequency } from '@trio/shared/notice';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -69,21 +69,59 @@ export default function NoticeManager() {
                 description="A popup shown to visitors on first load. Disabled until you turn it on."
             />
 
+            <div
+                className={
+                    draft.enabled
+                        ? 'mb-4 flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3'
+                        : 'mb-4 flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3'
+                }
+            >
+                <div>
+                    <p className="text-sm font-semibold text-slate-900">
+                        Notice is {draft.enabled ? 'live' : 'disabled'}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                        {draft.enabled
+                            ? 'Public site will show this popup on load.'
+                            : 'No popup will be shown until enabled.'}
+                    </p>
+                </div>
+                <Button
+                    size="sm"
+                    variant={draft.enabled ? 'ghost' : 'primary'}
+                    onClick={async () => {
+                        const next = !draft.enabled;
+                        set('enabled', next);
+                        try {
+                            await update.mutateAsync({ enabled: next });
+                            toast.success(next ? 'Notice enabled' : 'Notice disabled');
+                        } catch {
+                            toast.error('Could not toggle notice');
+                            set('enabled', !next);
+                        }
+                    }}
+                    loading={update.isPending}
+                >
+                    {draft.enabled ? (
+                        <>
+                            <EyeOff className="h-4 w-4" />
+                            Disable
+                        </>
+                    ) : (
+                        <>
+                            <Eye className="h-4 w-4" />
+                            Enable
+                        </>
+                    )}
+                </Button>
+            </div>
+
             <div className="grid gap-4 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle>Content</CardTitle>
                     </CardHeader>
                     <CardBody className="space-y-3">
-                        <label className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2">
-                            <span className="text-sm text-slate-700">Enabled</span>
-                            <input
-                                type="checkbox"
-                                className="h-4 w-4 cursor-pointer accent-emerald-600"
-                                checked={draft.enabled}
-                                onChange={(e) => set('enabled', e.target.checked)}
-                            />
-                        </label>
                         <Field label="Title">
                             <Input
                                 value={draft.title}

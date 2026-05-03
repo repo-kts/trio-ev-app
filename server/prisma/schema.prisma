@@ -207,6 +207,7 @@ model CarouselSlide {
   carousel    Carousel  @relation(fields: [carouselId], references: [id], onDelete: Cascade)
   carouselId  String
   kind        SlideKind
+  enabled     Boolean   @default(true)
   mediaUrl    String
   order       Int       @default(0)
   durationMs  Int?

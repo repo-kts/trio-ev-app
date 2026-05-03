@@ -1,14 +1,23 @@
--- AlterTable: visits gain referrer + visitorId
-ALTER TABLE "visits" ADD COLUMN "referrer" TEXT;
-ALTER TABLE "visits" ADD COLUMN "visitorId" TEXT;
-CREATE INDEX "visits_visitorId_createdAt_idx" ON "visits" ("visitorId", "createdAt");
+-- visits gain referrer + visitorId (idempotent)
+ALTER TABLE "visits" ADD COLUMN IF NOT EXISTS "referrer" TEXT;
+ALTER TABLE "visits" ADD COLUMN IF NOT EXISTS "visitorId" TEXT;
+CREATE INDEX IF NOT EXISTS "visits_visitorId_createdAt_idx" ON "visits" ("visitorId", "createdAt");
 
 -- Enums
-CREATE TYPE "CarouselTransition" AS ENUM ('FADE', 'SLIDE');
-CREATE TYPE "SlideKind" AS ENUM ('IMAGE', 'VIDEO');
+DO $$ BEGIN
+    CREATE TYPE "CarouselTransition" AS ENUM ('FADE', 'SLIDE');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE "SlideKind" AS ENUM ('IMAGE', 'VIDEO');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Carousel
-CREATE TABLE "carousels" (
+CREATE TABLE IF NOT EXISTS "carousels" (
     "id" TEXT PRIMARY KEY,
     "name" TEXT NOT NULL DEFAULT 'default',
     "enabled" BOOLEAN NOT NULL DEFAULT true,
@@ -22,9 +31,9 @@ CREATE TABLE "carousels" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL
 );
-CREATE UNIQUE INDEX "carousels_name_key" ON "carousels" ("name");
+CREATE UNIQUE INDEX IF NOT EXISTS "carousels_name_key" ON "carousels" ("name");
 
-CREATE TABLE "carousel_slides" (
+CREATE TABLE IF NOT EXISTS "carousel_slides" (
     "id" TEXT PRIMARY KEY,
     "carouselId" TEXT NOT NULL,
     "kind" "SlideKind" NOT NULL,
@@ -41,10 +50,10 @@ CREATE TABLE "carousel_slides" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "carousel_slides_carouselId_fkey" FOREIGN KEY ("carouselId") REFERENCES "carousels"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-CREATE INDEX "carousel_slides_carouselId_order_idx" ON "carousel_slides" ("carouselId", "order");
+CREATE INDEX IF NOT EXISTS "carousel_slides_carouselId_order_idx" ON "carousel_slides" ("carouselId", "order");
 
--- Notice (singleton; seed one row at startup)
-CREATE TABLE "notices" (
+-- Notice (singleton)
+CREATE TABLE IF NOT EXISTS "notices" (
     "id" TEXT PRIMARY KEY,
     "enabled" BOOLEAN NOT NULL DEFAULT false,
     "title" TEXT NOT NULL DEFAULT 'Notice',

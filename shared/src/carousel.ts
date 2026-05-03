@@ -9,6 +9,7 @@ export type CarouselTransition = z.infer<typeof carouselTransitionSchema>;
 export const carouselSlideSchema = z.object({
     id: z.string(),
     kind: slideKindSchema,
+    enabled: z.boolean(),
     mediaUrl: z.string(),
     order: z.number().int(),
     durationMs: z.number().int().nullable(),
@@ -50,6 +51,7 @@ export type CarouselUpdateInput = z.infer<typeof carouselUpdateSchema>;
 
 export const slideUpsertSchema = z.object({
     kind: slideKindSchema,
+    enabled: z.boolean().optional(),
     mediaUrl: z.string().min(1).max(2048),
     order: z.number().int().min(0).max(999).optional(),
     durationMs: z.number().int().min(500).max(60000).nullable().optional(),
@@ -60,6 +62,11 @@ export const slideUpsertSchema = z.object({
     textColor: z.string().max(32).nullable().optional(),
     overlayOpacity: z.number().int().min(0).max(100).optional(),
 });
+
+export const slideTogglePatchSchema = z.object({
+    enabled: z.boolean(),
+});
+export type SlideTogglePatch = z.infer<typeof slideTogglePatchSchema>;
 export type SlideUpsertInput = z.infer<typeof slideUpsertSchema>;
 
 export const slideReorderSchema = z.object({

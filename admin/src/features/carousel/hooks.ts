@@ -47,6 +47,15 @@ export function useDeleteSlideMutation() {
     });
 }
 
+export function useToggleSlideMutation() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
+            api.toggleSlide(id, enabled),
+        onSuccess: () => qc.invalidateQueries({ queryKey: carouselKeys.all() }),
+    });
+}
+
 export function useReorderSlidesMutation() {
     const qc = useQueryClient();
     return useMutation({

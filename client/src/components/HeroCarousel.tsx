@@ -27,11 +27,13 @@ export function HeroCarousel() {
         return <div className="h-screen w-full bg-black" />;
     }
 
-    if (!data || !data.enabled || data.slides.length === 0) {
+    const visibleSlides = data?.slides.filter((s) => s.enabled) ?? [];
+
+    if (!data || !data.enabled || visibleSlides.length === 0) {
         return <HeroSection />;
     }
 
-    return <CarouselView carousel={data} />;
+    return <CarouselView carousel={{ ...data, slides: visibleSlides }} />;
 }
 
 function CarouselView({ carousel }: { carousel: Carousel }) {

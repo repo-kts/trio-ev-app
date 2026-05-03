@@ -31,6 +31,11 @@ export async function deleteSlide(id: string): Promise<void> {
     await api.delete(`/api/admin/carousel/slides/${id}`);
 }
 
+export async function toggleSlide(id: string, enabled: boolean): Promise<CarouselSlide> {
+    const { data } = await api.patch(`/api/admin/carousel/slides/${id}/toggle`, { enabled });
+    return data;
+}
+
 export async function reorderSlides(input: SlideReorderInput): Promise<Carousel> {
     const { data } = await api.post('/api/admin/carousel/slides/reorder', input);
     return data;

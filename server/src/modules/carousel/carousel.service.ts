@@ -10,6 +10,7 @@ import type {
 const slideSelect = {
     id: true,
     kind: true,
+    enabled: true,
     mediaUrl: true,
     order: true,
     durationMs: true,
@@ -75,6 +76,7 @@ export async function addSlide(input: SlideUpsertInput) {
         data: {
             carouselId: id,
             kind: input.kind,
+            enabled: input.enabled ?? true,
             mediaUrl: input.mediaUrl,
             order,
             durationMs: input.durationMs ?? null,
@@ -96,6 +98,7 @@ export async function updateSlide(slideId: string, input: SlideUpsertInput) {
         where: { id: slideId },
         data: {
             kind: input.kind,
+            enabled: input.enabled ?? existing.enabled,
             mediaUrl: input.mediaUrl,
             order: input.order ?? existing.order,
             durationMs: input.durationMs ?? null,
@@ -106,6 +109,16 @@ export async function updateSlide(slideId: string, input: SlideUpsertInput) {
             textColor: input.textColor ?? null,
             overlayOpacity: input.overlayOpacity ?? existing.overlayOpacity,
         },
+        select: slideSelect,
+    });
+}
+
+export async function toggleSlide(slideId: string, enabled: boolean) {
+    const existing = await prisma.carouselSlide.findUnique({ where: { id: slideId } });
+    if (!existing) throw notFound('Slide not found');
+    return prisma.carouselSlide.update({
+        where: { id: slideId },
+        data: { enabled },
         select: slideSelect,
     });
 }

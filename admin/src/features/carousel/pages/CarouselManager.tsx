@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import {
     ArrowDown,
     ArrowUp,
+    Eye,
+    EyeOff,
     Image as ImageIcon,
     Loader2,
     Pencil,
@@ -33,6 +35,7 @@ import {
     useCarouselQuery,
     useDeleteSlideMutation,
     useReorderSlidesMutation,
+    useToggleSlideMutation,
     useUpdateCarouselMutation,
     useUpdateSlideMutation,
 } from '../hooks';
@@ -45,6 +48,7 @@ export default function CarouselManager() {
     const updateCarousel = useUpdateCarouselMutation();
     const reorder = useReorderSlidesMutation();
     const remove = useDeleteSlideMutation();
+    const toggle = useToggleSlideMutation();
     const [editorOpen, setEditorOpen] = useState(false);
     const [editing, setEditing] = useState<CarouselSlide | null>(null);
 
@@ -76,6 +80,43 @@ export default function CarouselManager() {
                 description="Add image or video slides shown on the public site. If empty, the default hero video plays."
             />
 
+            <div
+                className={
+                    carousel.enabled
+                        ? 'mb-4 flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3'
+                        : 'mb-4 flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3'
+                }
+            >
+                <div>
+                    <p className="text-sm font-semibold text-slate-900">
+                        Carousel is {carousel.enabled ? 'live' : 'disabled'}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                        {carousel.enabled
+                            ? 'Public site shows this carousel.'
+                            : 'Public site falls back to the default hero video.'}
+                    </p>
+                </div>
+                <Button
+                    size="sm"
+                    variant={carousel.enabled ? 'ghost' : 'primary'}
+                    onClick={() => updateCarousel.mutate({ enabled: !carousel.enabled })}
+                    loading={updateCarousel.isPending}
+                >
+                    {carousel.enabled ? (
+                        <>
+                            <EyeOff className="h-4 w-4" />
+                            Disable
+                        </>
+                    ) : (
+                        <>
+                            <Eye className="h-4 w-4" />
+                            Enable
+                        </>
+                    )}
+                </Button>
+            </div>
+
             <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
                 <Card>
                     <CardHeader className="flex items-center justify-between">
@@ -102,7 +143,11 @@ export default function CarouselManager() {
                                 {carousel.slides.map((slide, idx) => (
                                     <li
                                         key={slide.id}
-                                        className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3"
+                                        className={
+                                            slide.enabled
+                                                ? 'flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3'
+                                                : 'flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 opacity-60'
+                                        }
                                     >
                                         <div className="flex h-16 w-28 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100">
                                             {slide.kind === 'IMAGE' ? (
@@ -121,9 +166,28 @@ export default function CarouselManager() {
                                             </p>
                                             <p className="truncate text-xs text-slate-500">
                                                 {slide.kind} · {slide.durationMs ?? carousel.defaultDurationMs}ms
+                                                {!slide.enabled && ' · hidden'}
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    toggle.mutate({
+                                                        id: slide.id,
+                                                        enabled: !slide.enabled,
+                                                    })
+                                                }
+                                                className="rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-emerald-700"
+                                                aria-label={slide.enabled ? 'Disable slide' : 'Enable slide'}
+                                                title={slide.enabled ? 'Disable' : 'Enable'}
+                                            >
+                                                {slide.enabled ? (
+                                                    <Eye className="h-4 w-4" />
+                                                ) : (
+                                                    <EyeOff className="h-4 w-4" />
+                                                )}
+                                            </button>
                                             <button
                                                 type="button"
                                                 onClick={() => moveSlide(idx, -1)}
@@ -191,7 +255,6 @@ function SettingsPanel({
     carousel: Carousel;
     onSave: (input: Partial<Carousel>) => void;
 }) {
-    const [enabled, setEnabled] = useState(carousel.enabled);
     const [autoplay, setAutoplay] = useState(carousel.autoplay);
     const [loop, setLoop] = useState(carousel.loop);
     const [swipe, setSwipe] = useState(carousel.swipe);
@@ -201,7 +264,6 @@ function SettingsPanel({
     const [defaultDurationMs, setDefaultDurationMs] = useState(carousel.defaultDurationMs);
 
     useEffect(() => {
-        setEnabled(carousel.enabled);
         setAutoplay(carousel.autoplay);
         setLoop(carousel.loop);
         setSwipe(carousel.swipe);
@@ -217,7 +279,6 @@ function SettingsPanel({
                 <CardTitle>Settings</CardTitle>
             </CardHeader>
             <CardBody className="space-y-3 text-sm">
-                <Toggle label="Enabled" value={enabled} onChange={setEnabled} />
                 <Toggle label="Autoplay" value={autoplay} onChange={setAutoplay} />
                 <Toggle label="Loop" value={loop} onChange={setLoop} />
                 <Toggle label="Swipe (drag/touch)" value={swipe} onChange={setSwipe} />
@@ -253,7 +314,6 @@ function SettingsPanel({
                     size="sm"
                     onClick={() =>
                         onSave({
-                            enabled,
                             autoplay,
                             loop,
                             swipe,
@@ -306,6 +366,7 @@ function SlideEditor({
     const add = useAddSlideMutation();
     const update = useUpdateSlideMutation();
     const [kind, setKind] = useState<SlideKind>(slide?.kind ?? 'IMAGE');
+    const [enabled, setEnabled] = useState<boolean>(slide?.enabled ?? true);
     const [mediaUrlValue, setMediaUrlValue] = useState(slide?.mediaUrl ?? '');
     const [headline, setHeadline] = useState(slide?.headline ?? '');
     const [sub, setSub] = useState(slide?.sub ?? '');
@@ -321,6 +382,7 @@ function SlideEditor({
     useEffect(() => {
         if (!open) return;
         setKind(slide?.kind ?? 'IMAGE');
+        setEnabled(slide?.enabled ?? true);
         setMediaUrlValue(slide?.mediaUrl ?? '');
         setHeadline(slide?.headline ?? '');
         setSub(slide?.sub ?? '');
@@ -338,6 +400,7 @@ function SlideEditor({
         }
         const input: SlideUpsertInput = {
             kind,
+            enabled,
             mediaUrl: mediaUrlValue,
             headline: headline || null,
             sub: sub || null,
@@ -383,6 +446,15 @@ function SlideEditor({
             className="max-w-2xl"
         >
             <div className="space-y-3 p-5">
+                <label className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2">
+                    <span className="text-sm text-slate-700">Slide enabled (visible on public site)</span>
+                    <input
+                        type="checkbox"
+                        className="h-4 w-4 cursor-pointer accent-emerald-600"
+                        checked={enabled}
+                        onChange={(e) => setEnabled(e.target.checked)}
+                    />
+                </label>
                 <div className="grid gap-3 sm:grid-cols-2">
                     <label className="space-y-1">
                         <span className="text-xs font-medium text-slate-600">Type</span>
