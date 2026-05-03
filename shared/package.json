@@ -11,7 +11,9 @@
         "./inquiry": "./src/inquiry.ts",
         "./dashboard": "./src/dashboard.ts",
         "./blog": "./src/blog.ts",
-        "./blog-render": "./src/blog-render.ts"
+        "./blog-render": "./src/blog-render.ts",
+        "./carousel": "./src/carousel.ts",
+        "./notice": "./src/notice.ts"
     },
     "dependencies": {
         "zod": "^3.23.8"

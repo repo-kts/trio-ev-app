@@ -6,6 +6,7 @@ import { badRequest, notFound } from '@/utils/http-error';
 
 const VARIANTS = [1600, 800, 400] as const;
 const MAX_BYTES = 8 * 1024 * 1024;
+const VIDEO_MAX_BYTES = 50 * 1024 * 1024;
 
 interface UploadInput {
     buffer: Buffer;
@@ -80,6 +81,32 @@ export async function uploadImage(input: UploadInput) {
             size: originalBuf.length,
             width: meta.width ?? null,
             height: meta.height ?? null,
+            alt: input.alt ?? null,
+            uploadedById: input.uploadedById,
+        },
+        select: mediaSelect,
+    });
+}
+
+export async function uploadVideo(input: UploadInput) {
+    if (!input.mimetype.startsWith('video/')) {
+        throw badRequest('Only video uploads supported here');
+    }
+    if (input.buffer.length > VIDEO_MAX_BYTES) {
+        throw badRequest('Video larger than 50 MB');
+    }
+    const key = newKey(input.originalName);
+    await putBuffer(key, input.buffer, input.mimetype);
+    return prisma.media.create({
+        data: {
+            kind: 'VIDEO',
+            originalKey: key,
+            thumbKey: null,
+            variants: [],
+            mime: input.mimetype,
+            size: input.buffer.length,
+            width: null,
+            height: null,
             alt: input.alt ?? null,
             uploadedById: input.uploadedById,
         },

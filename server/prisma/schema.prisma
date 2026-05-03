@@ -36,9 +36,12 @@ model Visit {
   path      String?
   ip        String?
   ua        String?
+  referrer  String?
+  visitorId String?
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+  @@index([visitorId, createdAt])
   @@map("visits")
 }
 
@@ -169,4 +172,75 @@ model PostTag {
   @@id([postId, tagId])
   @@index([tagId])
   @@map("post_tags")
+}
+
+enum CarouselTransition {
+  FADE
+  SLIDE
+}
+
+enum SlideKind {
+  IMAGE
+  VIDEO
+}
+
+model Carousel {
+  id               String             @id @default(cuid())
+  name             String             @unique @default("default")
+  enabled          Boolean            @default(true)
+  autoplay         Boolean            @default(true)
+  loop             Boolean            @default(true)
+  swipe            Boolean            @default(true)
+  showArrows       Boolean            @default(true)
+  showDots         Boolean            @default(true)
+  transition       CarouselTransition @default(SLIDE)
+  defaultDurationMs Int               @default(5000)
+  slides           CarouselSlide[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@map("carousels")
+}
+
+model CarouselSlide {
+  id          String    @id @default(cuid())
+  carousel    Carousel  @relation(fields: [carouselId], references: [id], onDelete: Cascade)
+  carouselId  String
+  kind        SlideKind
+  mediaUrl    String
+  order       Int       @default(0)
+  durationMs  Int?
+  headline    String?
+  sub         String?
+  ctaLabel    String?
+  ctaHref     String?
+  textColor   String?
+  overlayOpacity Int    @default(40)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([carouselId, order])
+  @@map("carousel_slides")
+}
+
+model Notice {
+  id              String   @id @default(cuid())
+  enabled         Boolean  @default(false)
+  title           String   @default("Notice")
+  body            String   @default("")
+  imageUrl        String?
+  redirectUrl     String?
+  bgColor         String   @default("#ffffff")
+  titleColor      String   @default("#0f172a")
+  bodyColor       String   @default("#334155")
+  titleSize       Int      @default(20)
+  bodySize        Int      @default(14)
+  imageWidth      Int      @default(480)
+  imageHeight     Int      @default(0)
+  dismissible     Boolean  @default(true)
+  showFrequency   String   @default("once-per-session")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("notices")
 }
