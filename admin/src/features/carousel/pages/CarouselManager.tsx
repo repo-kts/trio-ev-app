@@ -431,8 +431,9 @@ function SlideEditor({
             setMediaUrlValue(url);
             setKind('VIDEO');
             toast.success('Video uploaded');
-        } catch {
-            toast.error('Video upload failed');
+        } catch (err) {
+            const e = err as { response?: { data?: { error?: string } } };
+            toast.error(e?.response?.data?.error ?? 'Video upload failed');
         } finally {
             setUploading(false);
         }

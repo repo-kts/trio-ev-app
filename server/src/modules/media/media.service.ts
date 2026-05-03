@@ -6,7 +6,7 @@ import { badRequest, notFound } from '@/utils/http-error';
 
 const VARIANTS = [1600, 800, 400] as const;
 const MAX_BYTES = 8 * 1024 * 1024;
-const VIDEO_MAX_BYTES = 50 * 1024 * 1024;
+const VIDEO_MAX_BYTES = 64 * 1024 * 1024;
 
 interface UploadInput {
     buffer: Buffer;
