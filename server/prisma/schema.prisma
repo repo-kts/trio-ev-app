@@ -224,6 +224,35 @@ model CarouselSlide {
   @@map("carousel_slides")
 }
 
+model SiteSetting {
+  id                 String   @id @default(cuid())
+  registeredAddress  String   @default("")
+  officeAddress      String   @default("")
+  phone              String   @default("")
+  email              String   @default("")
+  contactCtaUrl      String   @default("/contact")
+  socials            Json     @default("[]")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model Station {
+  id        String   @id @default(cuid())
+  name      String
+  state     String
+  lat       Float
+  lon       Float
+  enabled   Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([enabled, order])
+  @@map("stations")
+}
+
 model Notice {
   id              String   @id @default(cuid())
   enabled         Boolean  @default(false)
