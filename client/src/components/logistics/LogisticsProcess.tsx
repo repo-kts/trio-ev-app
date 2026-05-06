@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Truck, Map, Zap, Radio, CheckCircle2, FileText, ShieldCheck } from 'lucide-react';
+import { Truck, Zap, FileText, ShieldCheck } from 'lucide-react';
 
 const STEPS = [
     {

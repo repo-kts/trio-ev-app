@@ -1,5 +1,4 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Activity, ShieldCheck } from 'lucide-react';
 import { useRef } from 'react';
 
 export function LogisticsHero() {

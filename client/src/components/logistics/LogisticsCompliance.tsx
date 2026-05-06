@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FileText, CreditCard, Wrench, PowerOff, ShieldCheck, Briefcase, ArrowRight } from 'lucide-react';
+import { FileText, CreditCard, Wrench, PowerOff } from 'lucide-react';
 
 const COMPLIANCE_ITEMS = [
     { 
@@ -60,7 +60,7 @@ export function LogisticsCompliance() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: idx * 0.1 }}
-                            className="group relative p-8 rounded-3xl bg-secondary/30 border border-white/5 hover:bg-secondary/50 transition-all duration-500 overflow-hidden cursor-pointer"
+                            className="group relative p-8 rounded-3xl bg-secondary/30 border border-white/5 hover:bg-secondary/50 transition-all duration-500 overflow-hidden"
                         >
                             {/* Animated Background Highlight */}
                             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -75,14 +75,9 @@ export function LogisticsCompliance() {
                                     <div className="h-px w-0 bg-accent group-hover:w-8 transition-all duration-500" />
                                 </h3>
                                 
-                                <p className="text-textPrimary/40 text-sm leading-relaxed mb-8">
+                                <p className="text-textPrimary/40 text-sm leading-relaxed">
                                     {item.desc}
                                 </p>
-                                
-                                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-textPrimary/20 group-hover:text-accent transition-colors">
-                                    <span>Review Document</span>
-                                    <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                                </div>
                             </div>
 
                             {/* Thin bottom separator highlight */}

@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { MapPin, Zap, Truck, Target } from 'lucide-react';
  
  export function LogisticsMap() {
     return (
@@ -77,12 +76,4 @@ function NetworkMetric({ label, value }: { label: string, value: string }) {
     );
 }
 
-function StatRow({ icon: Icon, label, value }: any) {
-    return (
-        <div className="flex items-center gap-3">
-            <Icon size={14} className="text-textPrimary/30" />
-            <span className="text-[11px] text-textPrimary/40 font-bold uppercase tracking-widest flex-1">{label}</span>
-            <span className="text-sm font-bold text-textPrimary">{value}</span>
-        </div>
-    );
-}
+

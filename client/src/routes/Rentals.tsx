@@ -6,7 +6,7 @@ import { RentalAudience } from '../components/rentals/RentalAudience';
 import { RentalHowItWorks } from '../components/rentals/RentalHowItWorks';
 import { RentalWhyHourly } from '../components/rentals/RentalWhyHourly';
 import { RentalCTA } from '../components/rentals/RentalCTA';
-import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
+
 
 export function Rentals() {
     return (

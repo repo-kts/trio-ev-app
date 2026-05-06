@@ -1,13 +1,9 @@
 import { motion } from 'framer-motion';
 import { LogisticsHero } from '../components/logistics/LogisticsHero';
 import { LogisticsProcess } from '../components/logistics/LogisticsProcess';
-
-
-
 import { LogisticsCompliance } from '../components/logistics/LogisticsCompliance';
-
 import { LogisticsCTA } from '../components/logistics/LogisticsCTA';
-import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
+import { IndiaFleetMap } from '../components/logistics/IndiaFleetMap';
 
 export function Logistics() {
     return (
@@ -19,7 +15,25 @@ export function Logistics() {
         >
             <LogisticsHero />
             <LogisticsProcess />
-            <IndiaNetworkMap />
+            
+            <section className="py-24 px-6 bg-secondary/10 border-y border-white/5 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+                    <div className="flex-1 space-y-8">
+                        <div>
+                            <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4 text-textPrimary">
+                                Nationwide <span className="text-accent">Fleet Coverage.</span>
+                            </h2>
+                            <p className="text-textPrimary/60 text-lg">
+                                Real-time visualization of our intelligent EV logistics infrastructure across major Indian economic hubs.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex-1 relative w-full max-w-2xl aspect-square bg-secondary/30 rounded-[3rem] border border-white/10 flex items-center justify-center overflow-hidden">
+                        <IndiaFleetMap />
+                    </div>
+                </div>
+            </section>
+
             <LogisticsCompliance />
             <LogisticsCTA />
         </motion.div>

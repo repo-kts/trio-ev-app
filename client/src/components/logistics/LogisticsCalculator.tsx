@@ -169,7 +169,15 @@ export function LogisticsCalculator() {
     );
 }
 
-function SliderInput({ label, value, min, max, step, onChange, format }: any) {
+function SliderInput({ label, value, min, max, step, onChange, format }: {
+    label: string;
+    value: number;
+    min: number;
+    max: number;
+    step: number;
+    onChange: (v: number) => void;
+    format: (v: number) => string;
+}) {
     return (
         <div className="group">
             <div className="flex justify-between items-center mb-4">

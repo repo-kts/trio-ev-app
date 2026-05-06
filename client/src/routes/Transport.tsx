@@ -8,7 +8,7 @@ import { WhyCompaniesChoose } from '../components/transport/WhyCompaniesChoose';
 import { TransportFeatures } from '../components/transport/TransportFeatures';
 import { SafetyEcosystem } from '../components/transport/SafetyEcosystem';
 import { TransportCaseStudy } from '../components/transport/TransportCaseStudy';
-import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
+
 
 export function Transport() {
     return (

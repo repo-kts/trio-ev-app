@@ -6,7 +6,7 @@ import { InvestorBenefits } from '../components/leasing/InvestorBenefits';
 import { EarningsSimulator } from '../components/leasing/EarningsSimulator';
 import { FleetGrowthVisual } from '../components/leasing/FleetGrowthVisual';
 import { FleetUseCases } from '../components/leasing/FleetUseCases';
-import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
+
 
 export function Leasing() {
     return (

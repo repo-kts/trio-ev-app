@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 
 const SOURCES = [
     'https://cdn.jsdelivr.net/gh/adarshbiradar/maps-geojson@master/india.json',
-    'https://cdn.jsdelivr.net/gh/Subhash9325/GeoJson-Data-of-Indian-States@master/Indian_States',
     'https://cdn.jsdelivr.net/gh/india-in-data/india-states-2019@master/india_states.geojson',
 ];
 
@@ -116,17 +115,23 @@ export function IndiaFleetMap() {
                     'M 78 30 L 110 28 L 130 40 L 152 55 L 158 78 L 150 95 ' +
                     'L 158 110 L 150 130 L 130 155 L 110 175 L 95 175 ' +
                     'L 80 155 L 70 130 L 60 110 L 55 90 L 50 70 L 60 50 Z');
-                svg.appendChild(path);
+                svg?.appendChild(path);
             }
 
             let geo: any = null;
             for (const url of SOURCES) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
                 try {
-                    const r = await fetch(url, { mode: 'cors' });
+                    const r = await fetch(url, { mode: 'cors', signal: controller.signal });
+                    clearTimeout(timeoutId);
                     if (!r.ok) continue;
                     geo = await r.json();
                     if (geo) break;
-                } catch (e) { /* try next */ }
+                } catch (e) {
+                    clearTimeout(timeoutId);
+                    /* try next */
+                }
             }
             if (cancelled) return;
             if (!geo || !geo.features) { drawFallback(); return; }
@@ -205,7 +210,7 @@ export function IndiaFleetMap() {
                 halo.setAttribute('cx', x.toFixed(2));
                 halo.setAttribute('cy', y.toFixed(2));
                 halo.setAttribute('r', '3.2');
-                stationsSvg.appendChild(halo);
+                stationsSvg?.appendChild(halo);
 
                 const pulse = document.createElementNS(NS, 'circle');
                 pulse.setAttribute('class', 'ifm-station-pulse');
@@ -215,7 +220,7 @@ export function IndiaFleetMap() {
                 pulse.style.setProperty('--cx', x.toFixed(2) + 'px');
                 pulse.style.setProperty('--cy', y.toFixed(2) + 'px');
                 pulse.style.setProperty('--delay', delay);
-                stationsSvg.appendChild(pulse);
+                stationsSvg?.appendChild(pulse);
 
                 const core = document.createElementNS(NS, 'circle');
                 core.setAttribute('class', 'ifm-station-core');
@@ -223,7 +228,7 @@ export function IndiaFleetMap() {
                 core.setAttribute('cy', y.toFixed(2));
                 core.setAttribute('r', '1.4');
                 core.style.setProperty('--delay', delay);
-                stationsSvg.appendChild(core);
+                stationsSvg?.appendChild(core);
             });
         })();
 
