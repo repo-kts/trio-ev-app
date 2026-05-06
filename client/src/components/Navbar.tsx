@@ -13,6 +13,7 @@ const NAV_ITEMS: NavItem[] = [
     { label: 'Rentals', href: '/rentals', type: 'link' },
     { label: 'Lease', href: '/leasing', type: 'link' },
     { label: 'Transportation', href: '/transport', type: 'link' },
+    { label: 'Logistics', href: '/logistics', type: 'link' },
     { label: 'Blog', href: '/blog', type: 'link' },
     { label: 'About us', href: '/about', type: 'link' },
 ];

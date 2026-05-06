@@ -8,6 +8,7 @@ import { WhyCompaniesChoose } from '../components/transport/WhyCompaniesChoose';
 import { TransportFeatures } from '../components/transport/TransportFeatures';
 import { SafetyEcosystem } from '../components/transport/SafetyEcosystem';
 import { TransportCaseStudy } from '../components/transport/TransportCaseStudy';
+import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
 
 export function Transport() {
     return (
@@ -43,6 +44,8 @@ export function Transport() {
 
             {/* Case Study */}
             <TransportCaseStudy />
+
+            {/* <IndiaNetworkMap /> */}
 
             {/* Final CTA */}
             <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">

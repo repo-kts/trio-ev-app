@@ -6,6 +6,7 @@ import { InvestorBenefits } from '../components/leasing/InvestorBenefits';
 import { EarningsSimulator } from '../components/leasing/EarningsSimulator';
 import { FleetGrowthVisual } from '../components/leasing/FleetGrowthVisual';
 import { FleetUseCases } from '../components/leasing/FleetUseCases';
+import { IndiaNetworkMap } from '../components/IndiaNetworkMap';
 
 export function Leasing() {
     return (
@@ -37,6 +38,8 @@ export function Leasing() {
 
             {/* How the Fleet is Used (Corporate, Commute, Mobility) */}
             <FleetUseCases />
+
+            {/* <IndiaNetworkMap /> */}
 
             {/* Final CTA */}
             <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">

@@ -49,7 +49,7 @@ export function IndiaNetworkMap() {
                     className="flex-1 relative w-full max-w-lg aspect-square bg-secondary/30 rounded-[3rem] border border-secondary flex items-center justify-center overflow-hidden"
                 >
                     <iframe 
-                        src="/IndiaMapAnimation.html" 
+                        src="/IndiaMap.html" 
                         title="India Network Map" 
                         className="absolute inset-0 w-full h-full border-none outline-none block"
                         scrolling="no"

@@ -11,6 +11,7 @@ import { About } from './About';
 import { Contact } from './Contact';
 import { Blog } from './Blog';
 import { BlogPost } from './BlogPost';
+import { Logistics } from './Logistics';
 import { NotFound } from './NotFound';
 
 export const router = createBrowserRouter([
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
             { path: 'contact', element: <Contact /> },
             { path: 'blog', element: <Blog /> },
             { path: 'blog/:slug', element: <BlogPost /> },
+            { path: 'logistics', element: <Logistics /> },
             { path: '*', element: <NotFound /> },
         ],
     },

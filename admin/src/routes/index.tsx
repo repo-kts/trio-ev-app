@@ -45,6 +45,7 @@ export const router = createBrowserRouter([
             { path: 'overview', element: withSuspense(<Overview />) },
             { path: 'inquiries', element: withSuspense(<InquiryList />) },
             { path: 'inquiries/:id', element: withSuspense(<InquiryList />) },
+            { path: 'logistics', element: withSuspense(<Placeholder title="Logistics" />) },
             { path: 'blog', element: withSuspense(<PostList />) },
             { path: 'blog/new', element: withSuspense(<PostEditor />) },
             { path: 'blog/:id', element: withSuspense(<PostEditor />) },
