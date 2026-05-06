@@ -4,3 +4,5 @@ export * from './dashboard';
 export * from './blog';
 export * from './carousel';
 export * from './notice';
+export * from './settings';
+export * from './station';
