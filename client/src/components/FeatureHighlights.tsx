@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Shield, Smartphone, PiggyBank, Leaf, Building2 } from 'lucide-react';
+
 
 const features = [
     { logo: "https://www.google.com/s2/favicons?domain=kpmg.com&sz=128", title: "KPMG" },

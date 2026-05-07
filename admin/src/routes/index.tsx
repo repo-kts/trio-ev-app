@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { AdminShell } from '@/components/layout/AdminShell';
 import { AuthGuard } from '@/features/auth/AuthGuard';
+import Placeholder from './Placeholder';
 
 const Login = lazy(() => import('@/features/auth/pages/Login'));
 const Overview = lazy(() => import('@/features/dashboard/pages/Overview'));
