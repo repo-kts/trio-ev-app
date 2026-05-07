@@ -775,28 +775,41 @@
     return false;
   }
 
-  // major Indian cities (lon, lat) – charging-station markers
-  const CITIES = [
-    { name: 'Delhi',     lon: 77.10, lat: 28.70 },
-    { name: 'Mumbai',    lon: 72.87, lat: 19.07 },
-    { name: 'Bengaluru', lon: 77.59, lat: 12.97 },
-    { name: 'Chennai',   lon: 80.27, lat: 13.08 },
-    { name: 'Kolkata',   lon: 88.36, lat: 22.57 },
-    { name: 'Hyderabad', lon: 78.49, lat: 17.39 },
-    { name: 'Pune',      lon: 73.85, lat: 18.52 },
-    { name: 'Ahmedabad', lon: 72.57, lat: 23.02 },
-    { name: 'Jaipur',    lon: 75.79, lat: 26.92 },
-    { name: 'Lucknow',   lon: 80.95, lat: 26.85 },
-    { name: 'Bhopal',    lon: 77.41, lat: 23.26 },
-    { name: 'Guwahati',  lon: 91.74, lat: 26.14 },
-    { name: 'Patna',     lon: 85.14, lat: 25.59 },
-    { name: 'Ranchi',    lon: 85.31, lat: 23.34 },
-    { name: 'Kochi',     lon: 76.27, lat: 9.93  },
-    { name: 'Visakhapatnam', lon: 83.22, lat: 17.69 },
-    { name: 'Chandigarh', lon: 76.78, lat: 30.73 },
-    { name: 'Nagpur',    lon: 79.09, lat: 21.15 },
-    { name: 'Surat',     lon: 72.83, lat: 21.17 },
+  // charging-station markers — sourced from the admin API; falls back to a
+  // sensible default list if the API is unreachable. Each entry: { name, lon, lat, state? }
+  const FALLBACK_CITIES = [
+    { name: 'Kolkata',   lon: 88.36, lat: 22.57, state: 'West Bengal' },
+    { name: 'Patna',     lon: 85.14, lat: 25.59, state: 'Bihar' },
+    { name: 'Ranchi',    lon: 85.31, lat: 23.34, state: 'Jharkhand' },
   ];
+  let CITIES = FALLBACK_CITIES.slice();
+  let HIGHLIGHT_STATES = new Set(FALLBACK_CITIES.map(c => (c.state || '').toLowerCase()));
+
+  // pull API base from query string (?api=…); empty falls back to same-origin
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const apiBase = params.get('api') || '';
+    const url = (apiBase.replace(/\/+$/, '')) + '/api/stations';
+    const resp = await fetch(url, { mode: 'cors' });
+    if (resp.ok) {
+      const list = await resp.json();
+      if (Array.isArray(list) && list.length > 0) {
+        CITIES = list
+          .filter((s) => s && typeof s.lat === 'number' && typeof s.lon === 'number')
+          .map((s) => ({
+            name: String(s.name || ''),
+            state: String(s.state || ''),
+            lat: Number(s.lat),
+            lon: Number(s.lon),
+          }));
+        HIGHLIGHT_STATES = new Set(
+          CITIES.map((c) => (c.state || '').toLowerCase()).filter(Boolean),
+        );
+      }
+    }
+  } catch (e) {
+    // network/CORS error — silent fallback to hardcoded list
+  }
 
   function drawFallback() {
     const path = document.createElementNS(NS, 'path');
@@ -1085,20 +1098,11 @@
     svg.appendChild(p);
   }
 
-  // 3) charging-station markers — only render for the three highlighted
-  // states (West Bengal, Bihar, Jharkhand). The rest of CITIES still feeds
-  // the popup point-in-polygon logic so other states show their hubs in
-  // the pop-out card.
-  const HIGHLIGHT_STATES = new Set(['west bengal', 'bihar', 'jharkhand']);
-  const highlightGeoms = geo.features
-    .filter(f => HIGHLIGHT_STATES.has(statKey(
-      (f.properties && (f.properties.st_nm || f.properties.NAME_1 || f.properties.ST_NM)) || ''
-    )))
-    .map(f => f.geometry);
-
-  const visibleStations = CITIES.filter(c =>
-    highlightGeoms.some(g => pointInGeometry([c.lon, c.lat], g))
-  );
+  // 3) charging-station markers — render every CITIES entry. The
+  // HIGHLIGHT_STATES set was used to filter when CITIES held all major
+  // Indian metros; with admin-driven data we render exactly what is
+  // configured.
+  const visibleStations = CITIES.slice();
 
   visibleStations.forEach((c, i) => {
     const [x, y] = projectLL(c.lon, c.lat);
