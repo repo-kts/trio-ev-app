@@ -67,8 +67,8 @@ export function ServicesSection() {
                                 <service.icon size={24} />
                             </div>
 
-                            <h3 className="text-xl font-heading font-bold uppercase tracking-tight mb-2.5 text-textPrimary group-hover:text-accent transition-colors duration-300">{service.title}</h3>
-                            <p className="text-sm text-textPrimary/70 mb-6 font-sans leading-relaxed">{service.description}</p>
+                            <h3 className="text-xl font-heading font-bold uppercase tracking-tight mb-2.5 text-textPrimary group-hover:text-accent transition-colors duration-300 min-h-[3.5rem] flex items-center">{service.title}</h3>
+                            <p className="text-sm text-textPrimary/70 mb-6 font-sans leading-relaxed flex-grow">{service.description}</p>
 
                             <ul className="space-y-2.5">
                                 {service.features.map((feature, j) => (
