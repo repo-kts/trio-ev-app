@@ -25,7 +25,7 @@ export function RentalsHeroBanner() {
                     className="font-heading text-[clamp(48px,7vw,96px)] font-bold leading-none tracking-tight text-textPrimary"
                 >
                     <span className="block">Rent EVs</span>
-                    <span className="block text-accent">by the hour.</span>
+                    <span className="block text-accent">by the Shift.</span>
                 </motion.h1>
 
                 <motion.div
@@ -35,11 +35,10 @@ export function RentalsHeroBanner() {
                     className="md:max-w-[300px]"
                 >
                     <strong className="block text-base uppercase tracking-wide text-textPrimary mb-2 font-sans font-bold">
-                        Simple. Flexible. Affordable.
+                        Simple. Flexible. Yours.
                     </strong>
                     <p className="text-textPrimary/55 text-sm leading-relaxed font-sans">
-                        Pay only for the hours you ride — no full-day charges, no ownership hassles.
-                        Pick up an electric vehicle for as little as 2 hours.
+                        No broker cuts. No fuel stops. No long contracts. Pick up a fully charged Trio EV for 12 to 25 hours and put it to work — however you need it.
                     </p>
                 </motion.div>
             </div>
@@ -61,10 +60,10 @@ export function RentalsHeroBanner() {
                 {/* Top labels row */}
                 <div className="absolute top-5 left-6 flex items-center gap-2 font-sans text-[10px] uppercase tracking-[0.18em] text-accent z-20">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                    Hourly fleet · across India
+                    Weekend fleet · Eastern India
                 </div>
                 <div className="absolute top-5 right-6 font-sans text-[10px] uppercase tracking-[0.14em] text-accent/50 z-20">
-                    Pay for the hours you ride.
+                    Pay for the hours your shift.
                 </div>
 
                 {/* ── SVG SCENE ── */}

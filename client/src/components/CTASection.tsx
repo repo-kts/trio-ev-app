@@ -4,10 +4,10 @@ export function CTASection() {
     return (
         <section className="py-32 px-6 relative overflow-hidden">
             <div className="absolute inset-0 bg-accent/5" />
-            
+
             {/* Breathing Gradient Orb */}
-            <motion.div 
-                animate={{ 
+            <motion.div
+                animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.5, 0.8, 0.5],
                 }}
@@ -16,9 +16,9 @@ export function CTASection() {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl aspect-square bg-accent/20 blur-[150px] rounded-full pointer-events-none" 
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl aspect-square bg-accent/20 blur-[150px] rounded-full pointer-events-none"
             />
-            
+
             <div className="max-w-4xl mx-auto text-center relative z-10">
                 <motion.h2
                     initial={{ opacity: 0, y: 30 }}
@@ -27,18 +27,18 @@ export function CTASection() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="font-heading text-5xl md:text-7xl font-bold uppercase tracking-tight mb-8 text-textPrimary leading-tight"
                 >
-                    Power your <span className="text-accent relative inline-block">
-                        journey
-                        <motion.span 
+                    The future runs on <span className="text-accent relative inline-block">
+                        Trio.
+                        <motion.span
                             initial={{ scaleX: 0 }}
                             whileInView={{ scaleX: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.5, duration: 0.8, ease: "easeInOut" }}
                             className="absolute -bottom-2 left-0 w-full h-2 bg-accent origin-left rounded-full"
                         />
-                    </span> with EV
+                    </span> Get it now.
                 </motion.h2>
-                
+
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}

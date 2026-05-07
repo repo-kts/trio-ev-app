@@ -1,17 +1,17 @@
 import { motion } from 'framer-motion';
 
 const stats = [
-    { label: "Vehicles", value: "5000+" },
-    { label: "Users", value: "20000+" },
-    { label: "Cities", value: "20+" },
-    { label: "Growth", value: "Rapid" }
+    { label: "Vehicles", value: "100+" },
+    { label: "Years", value: "4" },
+    { label: "Cities", value: "3" },
+    { label: "Network", value: "1" }
 ];
 
 export function IndiaNetworkMap() {
     return (
         <section id="network" className="py-24 px-6 md:px-12 bg-secondary/20 border-y border-secondary/50">
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-                
+
                 <div className="flex-1 space-y-8">
                     <motion.div
                         initial={{ opacity: 0, x: -40 }}
@@ -19,13 +19,12 @@ export function IndiaNetworkMap() {
                         viewport={{ once: true }}
                     >
                         <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4 text-textPrimary">
-                            India's Fastest Growing Network
+                            THE GRID IS SPREADING
                         </h2>
                         <p className="text-textPrimary/60 text-lg">
-                            We are rapidly expanding across the nation, bringing smart and sustainable mobility to major cities. Join our expanding footprint.
-                        </p>
+                            Three cities live. More coming. Every vehicle we add, every city we enter, every client we serve makes the Trio network stronger for everyone inside it                        </p>
                     </motion.div>
-                    
+
                     <div className="grid grid-cols-2 gap-8 pt-8 border-t border-secondary">
                         {stats.map((stat, i) => (
                             <motion.div
@@ -48,9 +47,9 @@ export function IndiaNetworkMap() {
                     viewport={{ once: true }}
                     className="flex-1 relative w-full max-w-lg aspect-square bg-secondary/30 rounded-[3rem] border border-secondary flex items-center justify-center overflow-hidden"
                 >
-                    <iframe 
-                        src="/IndiaMap.html" 
-                        title="India Network Map" 
+                    <iframe
+                        src="/IndiaMap.html"
+                        title="India Network Map"
                         className="absolute inset-0 w-full h-full border-none outline-none block"
                         scrolling="no"
                     />

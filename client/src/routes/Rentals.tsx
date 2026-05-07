@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { RentalsHeroBanner } from '../components/rentals/RentalsHeroBanner';
-import { DestinationGrid } from '../components/rentals/travel-mode/DestinationGrid';
 import { RentalPlans } from '../components/rentals/RentalPlans';
 import { RentalAudience } from '../components/rentals/RentalAudience';
 import { RentalHowItWorks } from '../components/rentals/RentalHowItWorks';
@@ -18,9 +17,6 @@ export function Rentals() {
         >
             {/* Hero banner: "Rent EVs by the hour" + poster stats + triplet */}
             <RentalsHeroBanner />
-
-            {/* KEEP: "Choose Your Destination" section (from picture) */}
-            <DestinationGrid />
 
             {/* Plans: Pick a plan that fits your day */}
             <RentalPlans />
