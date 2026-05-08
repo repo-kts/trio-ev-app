@@ -9,6 +9,7 @@ import { TransportFeatures } from '../components/transport/TransportFeatures';
 import { SafetyEcosystem } from '../components/transport/SafetyEcosystem';
 import { TransportCaseStudy } from '../components/transport/TransportCaseStudy';
 
+
 export function Transport() {
     return (
         <motion.div
@@ -43,6 +44,8 @@ export function Transport() {
 
             {/* Case Study */}
             <TransportCaseStudy />
+
+            {/* <IndiaNetworkMap /> */}
 
             {/* Final CTA */}
             <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">

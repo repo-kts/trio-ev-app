@@ -70,12 +70,11 @@ export function RentalWhyHourly() {
                 className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8"
             >
                 <h2 className="font-heading text-[clamp(36px,5vw,68px)] leading-[0.9] uppercase text-textPrimary">
-                    Why hourly<br />
+                    Why SHORT-TERM<br />
                     <span className="text-accent">rentals work.</span>
                 </h2>
                 <p className="md:max-w-[300px] text-sm text-textPrimary/60 leading-relaxed">
-                    Five concrete reasons riders and earners are choosing Trio over ownership.
-                </p>
+                    Five reasons people are choosing to rent over own.                </p>
             </motion.div>
 
             {/* Bento Grid */}
@@ -90,16 +89,16 @@ export function RentalWhyHourly() {
                 >
                     <span className="font-sans text-[10px] uppercase tracking-[0.18em] text-black/45">— 01</span>
                     <h4 className="font-heading text-[clamp(32px,5vw,48px)] uppercase leading-tight text-[#0a0a0a]">
-                        Pay only for what you use.
+                        PAY ONLY FOR THE TIME YOU NEED.
                     </h4>
                 </motion.div>
 
                 {/* Other tiles */}
                 {[
-                    { idx: '— 02', title: 'Earn while you ride', desc: 'Take on deliveries or rideshare shifts.', bg: 'bg-secondary/40 border border-white/8' },
-                    { idx: '— 03', title: 'No ownership stress', desc: 'No EMI, insurance, or maintenance.', bg: 'bg-secondary border border-white/5' },
-                    { idx: '— 04', title: 'Eco-friendly', desc: 'Zero fuel costs. Zero emissions.', bg: 'bg-secondary/40 border border-white/8' },
-                    { idx: '— 05', title: 'Fully flexible', desc: 'Rent on your schedule — day or night.', bg: 'bg-secondary border border-white/5' },
+                    { idx: '— 02', title: 'NO LONG TERM COMMITMENT', desc: 'No EMI stretching across years. No insurance renewals. No service appointments. Use it for your hours and walk away with nothing owed.', bg: 'bg-secondary/40 border border-white/8' },
+                    { idx: '— 03', title: 'NO OWNERSHIP BURDEN', desc: 'A vehicle sitting idle costs money every single day. Renting means you only pay when you actually need to move.', bg: 'bg-secondary border border-white/5' },
+                    { idx: '— 04', title: 'CLEAN BY DEFAULT', desc: 'Every vehicle runs on electric. No fuel costs eating into your day. No emissions. Just a fully charged vehicle ready to go.', bg: 'bg-secondary/40 border border-white/8' },
+                    { idx: '— 05', title: 'ON YOUR SCHEDULE', desc: 'Morning. Afternoon. Late night. There are no fixed windows and no minimum days. Rent when it makes sense for you — not when it suits someone else.', bg: 'bg-secondary border border-white/5' },
                 ].map((item, i) => (
                     <motion.div
                         key={i}

@@ -4,33 +4,33 @@ const plans = [
     {
         idx: '— 01',
         badge: 'Short Trip',
-        hours: '2',
-        title: 'Quick errands',
-        desc: 'Local travel, supply runs, a fast hop across town and back.',
+        hours: '12',
+        title: 'FOR THE SHORT RUN',
+        desc: 'Enough time to get where you need to go, do what you need to do, and be back before the day ends.',
         dark: false,
     },
     {
         idx: '— 02',
-        badge: 'Work Shift',
-        hours: '5',
-        title: 'Peak deliveries',
-        desc: 'Built around the lunch & dinner rush for delivery and rideshare partners.',
+        badge: 'THE DAY SHIFT',
+        hours: '16',
+        title: 'FOR A FULL DAY OUT',
+        desc: 'A solid block of time that covers your morning, your afternoon, and gets you home before midnight.',
         dark: true,
     },
     {
         idx: '— 03',
-        badge: 'Half Day',
-        hours: '8',
-        title: 'Commute & gigs',
-        desc: 'Office workdays, part-time gigs, an entire shift covered end to end.',
+        badge: 'EXTENDED DAY',
+        hours: '20',
+        title: 'FOR THE LONG RUN',
+        desc: ' Early starts, late finishes, and everything that falls in between — covered without having to watch the clock.',
         dark: false,
     },
     {
         idx: '— 04',
-        badge: 'Full Day',
-        hours: '24',
-        title: 'Weekend & trips',
-        desc: "Longer trips, weekend use, anything that doesn't fit the shorter slots.",
+        badge: 'OVERNIGHT',
+        hours: '25',
+        title: 'FOR THE FULL STRETCH',
+        desc: "Take it out today. Use it through the night. Return it tomorrow. No rushing. No cutoffs. Your time.",
         dark: true,
     },
 ];
@@ -46,13 +46,12 @@ export function RentalPlans() {
                 transition={{ duration: 0.7 }}
                 className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8"
             >
-                <h2 className="font-heading text-[clamp(52px,8vw,120px)] leading-[0.88] uppercase text-textPrimary">
+                <h2 className="font-heading text-[clamp(40px,7vw,80px)] leading-[0.92] uppercase text-textPrimary">
                     Pick a plan that<br />
                     <span className="text-accent">fits your day.</span>
                 </h2>
                 <p className="md:max-w-[300px] text-sm text-textPrimary/60 leading-relaxed">
-                    Four blocks, one fleet. Most riders start on Short Trip and move up as they take on more shifts.
-                </p>
+                    Four shifts. One fleet. Pick what works for your day and go.                </p>
             </motion.div>
 
             {/* Plans Grid */}
@@ -86,11 +85,13 @@ export function RentalPlans() {
 
                         {/* Hours + Info */}
                         <div>
-                            <div className="font-heading leading-none text-accent mt-6 mb-1" style={{ fontSize: 'clamp(72px, 10vw, 96px)' }}>
-                                {plan.hours}
-                                <sup className="font-sans text-[20px] text-textPrimary/40 align-top ml-2 font-normal">hrs</sup>
+                            <div className="flex items-baseline gap-2 mt-6 mb-1">
+                                <span className="font-heading leading-none text-accent" style={{ fontSize: 'clamp(64px, 8vw, 84px)' }}>
+                                    {plan.hours}
+                                </span>
+                                <span className="font-sans text-[18px] uppercase tracking-widest text-textPrimary/40 font-bold">hrs</span>
                             </div>
-                            <h3 className="font-heading text-2xl uppercase tracking-wide mb-2 text-textPrimary">{plan.title}</h3>
+                            <h3 className="font-heading text-xl uppercase tracking-wider mb-2 text-textPrimary">{plan.title}</h3>
                             <p className="text-sm text-textPrimary/50 leading-relaxed">{plan.desc}</p>
                         </div>
                     </motion.div>

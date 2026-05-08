@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 const audiences = [
     {
         idx: '— 01',
-        title: 'Part-time\nearners',
-        desc: 'Picking up extra income on the side without buying or leasing a vehicle.',
+        title: 'THE INDEPENDENT DRIVER',
+        desc: 'You work on your own terms. Your schedule changes week to week. You need a vehicle that shows up when you do — without locking you into an EMI or a lease you didnt ask for.',
         icon: (
             <svg className="w-12 h-12 text-accent" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="24" cy="24" r="16" />
@@ -14,8 +14,8 @@ const audiences = [
     },
     {
         idx: '— 02',
-        title: 'Office\nworkers',
-        desc: 'Evening errands, late commutes, the occasional weekday detour to get stuff done.',
+        title: 'THE DAILY COMMUTER',
+        desc: 'You know exactly when you need a vehicle and when you dont. Early mornings, late nights, the gaps public transport leaves behind. Pay for those hours. Not the rest.',
         icon: (
             <svg className="w-12 h-12 text-accent" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="8" y="10" width="32" height="28" rx="2" />
@@ -25,8 +25,8 @@ const audiences = [
     },
     {
         idx: '— 03',
-        title: 'Personal\ntravel & trips',
-        desc: 'Weekend getaways, family outings, road trips and out-of-town visits — without the cost of owning a car.',
+        title: 'THE OCCASIONAL TRAVELLER',
+        desc: 'Not every trip needs a car you own. Family visits, weekend plans, a day outside the city — rent what you need, go where you want, return it when you are back.',
         icon: (
             <svg className="w-12 h-12 text-accent" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 36 L20 14 L28 24 L34 18 L40 36 Z" />
@@ -52,8 +52,7 @@ export function RentalAudience() {
                     Who it's <span className="text-accent">for.</span>
                 </h2>
                 <p className="md:max-w-[300px] text-sm text-textPrimary/60 leading-relaxed">
-                    Hourly rentals work best if you need short-term transport without committing to a full day.
-                </p>
+                    If you need a vehicle for a few hours — not a lifetime commitment — this is built for you.                </p>
             </motion.div>
 
             {/* Cards */}

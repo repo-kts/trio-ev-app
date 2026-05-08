@@ -7,6 +7,7 @@ import { EarningsSimulator } from '../components/leasing/EarningsSimulator';
 import { FleetGrowthVisual } from '../components/leasing/FleetGrowthVisual';
 import { FleetUseCases } from '../components/leasing/FleetUseCases';
 
+
 export function Leasing() {
     return (
         <motion.div
@@ -37,6 +38,8 @@ export function Leasing() {
 
             {/* How the Fleet is Used (Corporate, Commute, Mobility) */}
             <FleetUseCases />
+
+            {/* <IndiaNetworkMap /> */}
 
             {/* Final CTA */}
             <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">

@@ -7,6 +7,7 @@ import {
     Settings,
     GalleryHorizontal,
     Megaphone,
+    Truck,
     MapPin,
     type LucideIcon,
 } from 'lucide-react';
@@ -21,6 +22,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
     { label: 'Overview', to: '/overview', icon: LayoutDashboard, end: true },
     { label: 'Inquiries', to: '/inquiries', icon: Inbox },
+    { label: 'Logistics', to: '/logistics', icon: Truck },
     { label: 'Blog', to: '/blog', icon: Newspaper },
     { label: 'Media', to: '/media', icon: ImageIcon },
     { label: 'Carousel', to: '/carousel', icon: GalleryHorizontal },
