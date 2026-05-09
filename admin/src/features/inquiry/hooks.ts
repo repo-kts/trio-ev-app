@@ -6,8 +6,12 @@ import type {
     InquiryReplyCreateInput,
     InquiryUpdateInput,
 } from '@trio/shared/inquiry';
+import type { InquiryStatus } from '@trio/shared/inquiry';
 import {
     addInquiryNote,
+    bulkAutoReply,
+    bulkDelete,
+    bulkUpdateStatus,
     getInquiry,
     getInquiryCounts,
     getInquiryStats,
@@ -105,5 +109,30 @@ export function useSendReplyMutation(id: string) {
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: inquiryKeys.all });
         },
+    });
+}
+
+export function useBulkStatusMutation() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (vars: { ids: string[]; status: InquiryStatus }) =>
+            bulkUpdateStatus(vars.ids, vars.status),
+        onSuccess: () => qc.invalidateQueries({ queryKey: inquiryKeys.all }),
+    });
+}
+
+export function useBulkDeleteMutation() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (ids: string[]) => bulkDelete(ids),
+        onSuccess: () => qc.invalidateQueries({ queryKey: inquiryKeys.all }),
+    });
+}
+
+export function useBulkAutoReplyMutation() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (ids: string[]) => bulkAutoReply(ids),
+        onSuccess: () => qc.invalidateQueries({ queryKey: inquiryKeys.all }),
     });
 }
