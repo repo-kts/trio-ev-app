@@ -42,9 +42,12 @@ export function BulkActionsBar({
     }, [statusOpen]);
 
     return (
-        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/60 px-3 py-2">
-            <span className="text-xs font-medium text-slate-700">
-                {count} selected
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-emerald-200/60 bg-emerald-50/40 px-3 py-2 shadow-[0_1px_2px_rgba(16,185,129,0.08)]">
+            <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-700">
+                <span className="grid h-5 min-w-[20px] place-items-center rounded-full bg-emerald-600 px-1.5 text-[10px] font-semibold text-white tabular-nums">
+                    {count}
+                </span>
+                selected
             </span>
             <div className="ml-auto flex flex-wrap items-center gap-2">
                 <div className="relative" ref={ref}>

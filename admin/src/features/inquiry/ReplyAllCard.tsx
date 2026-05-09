@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MailCheck, Settings2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Toggle } from '@/components/ui/Toggle';
 import { cn } from '@/lib/cn';
 import { toast } from '@/hooks/useToast';
 import { useSettingsQuery, useUpdateSettingsMutation } from '@/features/settings/hooks';
@@ -33,26 +34,33 @@ export function ReplyAllCard() {
 
     return (
         <>
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
                 <span
                     className={cn(
-                        'grid h-12 w-12 shrink-0 place-items-center rounded-xl',
-                        enabled ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400',
+                        'grid h-11 w-11 shrink-0 place-items-center rounded-xl ring-1 ring-inset',
+                        enabled
+                            ? 'bg-emerald-50 text-emerald-600 ring-emerald-100'
+                            : 'bg-slate-100 text-slate-400 ring-slate-200',
                     )}
                 >
                     <MailCheck className="h-5 w-5" />
                 </span>
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                        <p className="text-xs font-medium text-slate-500">Reply All</p>
+                        <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                            Reply All
+                        </p>
                         <Toggle checked={enabled} onChange={onToggle} disabled={update.isPending} />
                     </div>
                     <p className="mt-0.5 text-sm font-semibold text-slate-900">
-                        {enabled ? 'Auto-reply ON' : 'Auto-reply OFF'}
+                        {enabled ? 'Auto-reply on' : 'Auto-reply off'}
                     </p>
-                    <div className="mt-1 flex items-center gap-2">
-                        <span className="truncate text-[11px] text-slate-500">
-                            Active: {activeTpl?.name ?? 'none'}
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <span className="inline-flex max-w-[140px] truncate text-[11px] text-slate-500">
+                            <span className="text-slate-400">Active:</span>
+                            <span className="ml-1 truncate font-medium text-slate-700">
+                                {activeTpl?.name ?? 'none'}
+                            </span>
                         </span>
                         <Button
                             size="sm"
@@ -61,7 +69,7 @@ export function ReplyAllCard() {
                             onClick={() => setOpen(true)}
                         >
                             <Settings2 className="h-3 w-3" />
-                            Manage templates
+                            Manage
                         </Button>
                     </div>
                 </div>
@@ -69,36 +77,5 @@ export function ReplyAllCard() {
 
             <TemplatesManagerModal open={open} onClose={() => setOpen(false)} />
         </>
-    );
-}
-
-function Toggle({
-    checked,
-    onChange,
-    disabled,
-}: {
-    checked: boolean;
-    onChange: () => void;
-    disabled?: boolean;
-}) {
-    return (
-        <button
-            type="button"
-            role="switch"
-            aria-checked={checked}
-            disabled={disabled}
-            onClick={onChange}
-            className={cn(
-                'relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-                checked ? 'bg-emerald-500' : 'bg-slate-300',
-            )}
-        >
-            <span
-                className={cn(
-                    'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform',
-                    checked ? 'translate-x-4' : 'translate-x-0.5',
-                )}
-            />
-        </button>
     );
 }
