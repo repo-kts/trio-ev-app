@@ -10,11 +10,9 @@ import {
 import {
     ArrowDown,
     ChevronRight,
-    Clock,
     Download,
     MessageSquare,
     Search,
-    TrendingUp,
     UserPlus,
 } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -25,6 +23,7 @@ import { Pagination } from '@/components/ui/Pagination';
 import { DataTable } from '@/components/data/DataTable';
 import { KpiCard } from '@/components/data/KpiCard';
 import { StatusBadge } from '../StatusBadge';
+import { ReplyAllCard } from '../ReplyAllCard';
 import { useInquiriesQuery, useInquiryCountsQuery, useInquiryStatsQuery } from '../hooks';
 import { buildExportUrl } from '../api';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
@@ -120,7 +119,7 @@ export default function InquiryList() {
                 description="Track, manage and respond to inquiries from businesses."
             />
 
-            <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 <KpiCard
                     label="Total Inquiries"
                     value={fmtNumber(stats.data?.total)}
@@ -135,28 +134,7 @@ export default function InquiryList() {
                     icon={<UserPlus className="h-5 w-5" />}
                     iconTone="blue"
                 />
-                <KpiCard
-                    label="Response Rate"
-                    value={
-                        stats.data?.responseRatePct != null
-                            ? `${stats.data.responseRatePct}%`
-                            : '—'
-                    }
-                    deltaPct={stats.data?.responseRateDeltaPct ?? null}
-                    icon={<TrendingUp className="h-5 w-5" />}
-                    iconTone="violet"
-                />
-                <KpiCard
-                    label="Avg. Response Time"
-                    value={
-                        stats.data?.avgResponseHours != null
-                            ? formatHours(stats.data.avgResponseHours)
-                            : '—'
-                    }
-                    deltaPct={stats.data?.avgResponseDeltaPct ?? null}
-                    icon={<Clock className="h-5 w-5" />}
-                    iconTone="amber"
-                />
+                <ReplyAllCard />
             </div>
 
             <Card>
@@ -228,14 +206,5 @@ export default function InquiryList() {
 function fmtNumber(n: number | undefined): string {
     if (n == null) return '—';
     return n.toLocaleString();
-}
-
-function formatHours(h: number): string {
-    if (h < 1) {
-        return `${Math.round(h * 60)}m`;
-    }
-    const hours = Math.floor(h);
-    const minutes = Math.round((h - hours) * 60);
-    return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
 }
 
