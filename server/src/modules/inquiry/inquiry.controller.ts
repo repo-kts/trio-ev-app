@@ -1,8 +1,10 @@
 import type { RequestHandler } from 'express';
 import * as inquiryService from './inquiry.service.js';
 import * as settingsService from '@/modules/settings/settings.service.js';
+import * as autoReplyService from '@/modules/auto-reply/auto-reply.service.js';
 import { sendMail, isMailerConfigured } from '@/lib/mailer';
 import { logger } from '@/lib/logger';
+import { badRequest } from '@/utils/http-error';
 import type {
     InquiryListQuery,
     InquiryNoteCreateInput,
@@ -21,11 +23,13 @@ function fireAutoReply(input: PublicInquirySubmitInput) {
             if (!isMailerConfigured()) return;
             const cfg = await settingsService.getAutoReply();
             if (!cfg.enabled) return;
+            const tpl = await autoReplyService.getActive();
+            if (!tpl) return;
             const vars = { name: input.name, subject: input.subject, email: input.email };
             await sendMail({
                 to: input.email,
-                subject: renderTemplate(cfg.subject, vars),
-                text: renderTemplate(cfg.body, vars),
+                subject: renderTemplate(tpl.subject, vars),
+                text: renderTemplate(tpl.body, vars),
             });
         } catch (err) {
             logger.warn({ err, to: input.email }, 'Auto-reply failed');
@@ -97,6 +101,27 @@ export const sendReplyHandler: RequestHandler<{ id: string }, unknown, InquiryRe
             next(err);
         }
     };
+
+export const sendAutoReplyHandler: RequestHandler<{ id: string }> = async (req, res, next) => {
+    try {
+        if (!isMailerConfigured()) {
+            throw badRequest('Email is not configured on the server');
+        }
+        const tpl = await autoReplyService.getActive();
+        if (!tpl) {
+            throw badRequest('No active auto-reply template');
+        }
+        const inquiry = await inquiryService.getById(req.params.id);
+        const vars = { name: inquiry.name, subject: inquiry.subject, email: inquiry.email };
+        const reply = await inquiryService.sendReply(req.params.id, req.user!.sub, {
+            subject: renderTemplate(tpl.subject, vars),
+            body: renderTemplate(tpl.body, vars),
+        });
+        res.status(201).json(reply);
+    } catch (err) {
+        next(err);
+    }
+};
 
 export const statsHandler: RequestHandler = async (_req, res, next) => {
     try {

@@ -13,6 +13,7 @@ import { carouselAdminRouter, carouselPublicRouter } from '@/modules/carousel/ca
 import { noticeAdminRouter, noticePublicRouter } from '@/modules/notice/notice.routes';
 import { settingsAdminRouter, settingsPublicRouter } from '@/modules/settings/settings.routes';
 import { stationAdminRouter, stationPublicRouter } from '@/modules/station/station.routes';
+import { autoReplyAdminRouter } from '@/modules/auto-reply/auto-reply.routes';
 import { requireAuth } from '@/middleware/auth';
 import { requireAdmin } from '@/middleware/requireAdmin';
 import { requireCsrf } from '@/middleware/csrf';
@@ -43,5 +44,6 @@ adminRouter.use('/carousel', carouselAdminRouter);
 adminRouter.use('/notice', noticeAdminRouter);
 adminRouter.use('/settings', settingsAdminRouter);
 adminRouter.use('/stations', stationAdminRouter);
+adminRouter.use('/auto-reply', autoReplyAdminRouter);
 
 apiRouter.use('/admin', adminRouter);

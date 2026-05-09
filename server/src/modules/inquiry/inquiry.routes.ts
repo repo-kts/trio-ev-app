@@ -14,6 +14,7 @@ import {
     detailHandler,
     exportCsvHandler,
     listHandler,
+    sendAutoReplyHandler,
     sendReplyHandler,
     statsHandler,
     submitPublicHandler,
@@ -44,3 +45,4 @@ inquiryAdminRouter.get('/:id', detailHandler);
 inquiryAdminRouter.patch('/:id', validate(inquiryUpdateSchema), updateHandler);
 inquiryAdminRouter.post('/:id/notes', validate(inquiryNoteCreateSchema), addNoteHandler);
 inquiryAdminRouter.post('/:id/replies', validate(inquiryReplyCreateSchema), sendReplyHandler);
+inquiryAdminRouter.post('/:id/send-auto-reply', sendAutoReplyHandler);
