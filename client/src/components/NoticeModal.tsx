@@ -75,6 +75,13 @@ export function NoticeModal() {
         maxWidth: '100%',
     };
 
+    const alignClass =
+        data.imageAlign === 'left'
+            ? 'justify-start'
+            : data.imageAlign === 'right'
+              ? 'justify-end'
+              : 'justify-center';
+
     return (
         <div
             role="dialog"
@@ -109,12 +116,14 @@ export function NoticeModal() {
                         {data.title}
                     </h3>
                     {data.imageUrl && (
-                        <img
-                            src={mediaUrl(data.imageUrl)}
-                            alt=""
-                            className="mt-4 rounded"
-                            style={imageStyle}
-                        />
+                        <div className={`mt-4 flex ${alignClass}`}>
+                            <img
+                                src={mediaUrl(data.imageUrl)}
+                                alt=""
+                                className="rounded"
+                                style={imageStyle}
+                            />
+                        </div>
                     )}
                     {data.body && (
                         <div

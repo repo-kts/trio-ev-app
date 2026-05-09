@@ -8,6 +8,13 @@ export function NoticePreview({ notice }: { notice: Notice }) {
         maxWidth: '100%',
     };
 
+    const alignClass =
+        notice.imageAlign === 'left'
+            ? 'justify-start'
+            : notice.imageAlign === 'right'
+              ? 'justify-end'
+              : 'justify-center';
+
     return (
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500">
@@ -22,12 +29,14 @@ export function NoticePreview({ notice }: { notice: Notice }) {
                         {notice.title || 'Notice'}
                     </h3>
                     {notice.imageUrl && (
-                        <img
-                            src={mediaUrl(notice.imageUrl)}
-                            alt=""
-                            className="mt-3 rounded"
-                            style={imageStyle}
-                        />
+                        <div className={`mt-3 flex ${alignClass}`}>
+                            <img
+                                src={mediaUrl(notice.imageUrl)}
+                                alt=""
+                                className="rounded"
+                                style={imageStyle}
+                            />
+                        </div>
                     )}
                     {notice.body && (
                         <div

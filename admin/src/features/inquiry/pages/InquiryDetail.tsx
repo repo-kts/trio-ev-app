@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { Globe, Mail, Phone, Send } from 'lucide-react';
+import { Globe, Mail, Phone, Send, Sparkles } from 'lucide-react';
 import { INQUIRY_STATUSES, type InquiryStatus } from '@trio/shared/inquiry';
 import { Drawer } from '@/components/ui/Drawer';
 import { Select } from '@/components/ui/Select';
@@ -11,6 +11,10 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { Avatar } from '@/components/ui/Avatar';
 import { StatusBadge } from '../StatusBadge';
 import { useInquiryQuery, useSendReplyMutation, useUpdateInquiryMutation } from '../hooks';
+import {
+    useSendInquiryAutoReplyMutation,
+    useTemplatesQuery,
+} from '@/features/auto-reply/hooks';
 import { toast } from '@/hooks/useToast';
 
 interface Props {
@@ -23,8 +27,11 @@ export function InquiryDetailDrawer({ id, open, onClose }: Props) {
     const query = useInquiryQuery(id);
     const updateMutation = useUpdateInquiryMutation(id ?? '');
     const replyMutation = useSendReplyMutation(id ?? '');
+    const autoReplyMutation = useSendInquiryAutoReplyMutation();
+    const templatesQuery = useTemplatesQuery();
 
     const inquiry = query.data;
+    const activeTemplate = (templatesQuery.data ?? []).find((t) => t.active);
 
     const [replySubject, setReplySubject] = useState('');
     const [replyBody, setReplyBody] = useState('');
@@ -171,39 +178,71 @@ export function InquiryDetailDrawer({ id, open, onClose }: Props) {
                                 className="min-h-[160px] resize-y rounded-none border-0 px-3 py-2 text-sm shadow-none focus-visible:ring-0"
                             />
                         </div>
-                        <div className="flex items-center justify-between gap-2 border-t border-slate-100 bg-slate-50 px-3 py-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50 px-3 py-2">
                             <span className="text-[11px] text-slate-500">
                                 {replyBody.length}/20000
                             </span>
-                            <Button
-                                size="sm"
-                                loading={replyMutation.isPending}
-                                disabled={!replySubject.trim() || !replyBody.trim()}
-                                onClick={() =>
-                                    replyMutation.mutate(
-                                        {
-                                            subject: replySubject.trim(),
-                                            body: replyBody.trim(),
-                                        },
-                                        {
-                                            onSuccess: () => {
-                                                setReplyBody('');
-                                                toast.success('Reply sent');
+                            <div className="flex flex-wrap items-center gap-2">
+                                {activeTemplate && id && (
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        loading={autoReplyMutation.isPending}
+                                        title={`Send active template: ${activeTemplate.name}`}
+                                        onClick={() =>
+                                            autoReplyMutation.mutate(id, {
+                                                onSuccess: () =>
+                                                    toast.success('Auto-reply sent'),
+                                                onError: (err) => {
+                                                    const msg =
+                                                        (err as {
+                                                            response?: {
+                                                                data?: { message?: string };
+                                                            };
+                                                        })?.response?.data?.message ??
+                                                        'Could not send auto-reply';
+                                                    toast.error(msg);
+                                                },
+                                            })
+                                        }
+                                    >
+                                        <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                                        Send auto-reply
+                                    </Button>
+                                )}
+                                <Button
+                                    size="sm"
+                                    loading={replyMutation.isPending}
+                                    disabled={!replySubject.trim() || !replyBody.trim()}
+                                    onClick={() =>
+                                        replyMutation.mutate(
+                                            {
+                                                subject: replySubject.trim(),
+                                                body: replyBody.trim(),
                                             },
-                                            onError: (err) => {
-                                                const msg =
-                                                    (err as { response?: { data?: { message?: string } } })
-                                                        ?.response?.data?.message ??
-                                                    'Could not send reply';
-                                                toast.error(msg);
+                                            {
+                                                onSuccess: () => {
+                                                    setReplyBody('');
+                                                    toast.success('Reply sent');
+                                                },
+                                                onError: (err) => {
+                                                    const msg =
+                                                        (err as {
+                                                            response?: {
+                                                                data?: { message?: string };
+                                                            };
+                                                        })?.response?.data?.message ??
+                                                        'Could not send reply';
+                                                    toast.error(msg);
+                                                },
                                             },
-                                        },
-                                    )
-                                }
-                            >
-                                <Send className="mr-1.5 h-3.5 w-3.5" />
-                                Send
-                            </Button>
+                                        )
+                                    }
+                                >
+                                    <Send className="mr-1.5 h-3.5 w-3.5" />
+                                    Send
+                                </Button>
+                            </div>
                         </div>
                     </section>
 

@@ -272,6 +272,19 @@ model Station {
   @@map("stations")
 }
 
+model AutoReplyTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  body      String
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active])
+  @@map("auto_reply_templates")
+}
+
 model Notice {
   id              String   @id @default(cuid())
   enabled         Boolean  @default(false)
@@ -286,6 +299,7 @@ model Notice {
   bodySize        Int      @default(14)
   imageWidth      Int      @default(480)
   imageHeight     Int      @default(0)
+  imageAlign      String   @default("center")
   dismissible     Boolean  @default(true)
   showFrequency   String   @default("once-per-session")
   createdAt       DateTime @default(now())

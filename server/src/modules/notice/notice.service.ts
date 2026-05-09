@@ -16,6 +16,7 @@ const select = {
     bodySize: true,
     imageWidth: true,
     imageHeight: true,
+    imageAlign: true,
     dismissible: true,
     showFrequency: true,
 } satisfies Prisma.NoticeSelect;
