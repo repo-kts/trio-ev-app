@@ -61,6 +61,24 @@ export const inquiryNoteCreateSchema = z.object({
 });
 export type InquiryNoteCreateInput = z.infer<typeof inquiryNoteCreateSchema>;
 
+export const inquiryBulkIdsSchema = z.object({
+    ids: z.array(z.string().min(1)).min(1).max(500),
+});
+export type InquiryBulkIdsInput = z.infer<typeof inquiryBulkIdsSchema>;
+
+export const inquiryBulkStatusSchema = z.object({
+    ids: z.array(z.string().min(1)).min(1).max(500),
+    status: inquiryStatusSchema,
+});
+export type InquiryBulkStatusInput = z.infer<typeof inquiryBulkStatusSchema>;
+
+export const inquiryBulkResultSchema = z.object({
+    sent: z.number(),
+    skipped: z.number(),
+    failed: z.number(),
+});
+export type InquiryBulkResult = z.infer<typeof inquiryBulkResultSchema>;
+
 export const inquiryReplyCreateSchema = z.object({
     subject: z.string().min(1).max(200),
     body: z.string().min(1).max(20000),
