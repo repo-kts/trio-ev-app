@@ -248,6 +248,9 @@ model SiteSetting {
   email              String   @default("")
   contactCtaUrl      String   @default("/contact")
   socials            Json     @default("[]")
+  autoReplyEnabled   Boolean  @default(false)
+  autoReplySubject   String   @default("Thanks for reaching out")
+  autoReplyBody      String   @default("Hi {{name}},\n\nThanks for getting in touch about \"{{subject}}\". We've received your message and our team will get back to you shortly.\n\n— Trio")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

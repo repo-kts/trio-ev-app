@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Edit2, Loader2, MapPin, Plus, Trash2 } from 'lucide-react';
+import { BookOpen, Edit2, Loader2, MapPin, Plus, Trash2, Youtube } from 'lucide-react';
 import type { Station, StationUpsertInput } from '@trio/shared/station';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardBody } from '@/components/ui/Card';
@@ -206,6 +206,35 @@ export default function StationsManager() {
                             onChange={(e) => setDraft({ ...draft, state: e.target.value })}
                         />
                     </Field>
+                    <div className="rounded-md border border-emerald-100 bg-emerald-50/60 px-3 py-2 text-xs text-slate-600">
+                        <p className="font-medium text-slate-700">
+                            Need help getting coordinates?
+                        </p>
+                        <p className="mt-0.5">
+                            On Google Maps, right-click a place → click the first row to copy
+                            "lat, lon". Or follow a tutorial:
+                        </p>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-3">
+                            <a
+                                href="https://support.google.com/maps/answer/18539"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 font-medium text-emerald-700 hover:underline"
+                            >
+                                <BookOpen className="h-3.5 w-3.5" />
+                                Blog tutorial
+                            </a>
+                            <a
+                                href="https://www.youtube.com/results?search_query=how+to+get+latitude+longitude+google+maps"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 font-medium text-emerald-700 hover:underline"
+                            >
+                                <Youtube className="h-3.5 w-3.5" />
+                                YouTube tutorial
+                            </a>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-2 gap-3">
                         <Field label="Latitude (-90 .. 90)">
                             <Input
@@ -239,10 +268,6 @@ export default function StationsManager() {
                             }
                         />
                     </label>
-                    <p className="text-xs text-slate-500">
-                        Tip: get coordinates from Google Maps — right-click a place → first row
-                        copies "lat, lon".
-                    </p>
                     <div className="flex justify-end gap-2 pt-2">
                         <Button variant="ghost" onClick={() => setDraftOpen(false)}>
                             Cancel

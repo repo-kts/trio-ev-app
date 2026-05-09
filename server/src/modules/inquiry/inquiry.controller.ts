@@ -1,5 +1,8 @@
 import type { RequestHandler } from 'express';
 import * as inquiryService from './inquiry.service.js';
+import * as settingsService from '@/modules/settings/settings.service.js';
+import { sendMail, isMailerConfigured } from '@/lib/mailer';
+import { logger } from '@/lib/logger';
 import type {
     InquiryListQuery,
     InquiryNoteCreateInput,
@@ -7,6 +10,28 @@ import type {
     InquiryUpdateInput,
     PublicInquirySubmitInput,
 } from './inquiry.schema.js';
+
+function renderTemplate(tpl: string, vars: Record<string, string>): string {
+    return tpl.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k) => vars[k] ?? '');
+}
+
+function fireAutoReply(input: PublicInquirySubmitInput) {
+    void (async () => {
+        try {
+            if (!isMailerConfigured()) return;
+            const cfg = await settingsService.getAutoReply();
+            if (!cfg.enabled) return;
+            const vars = { name: input.name, subject: input.subject, email: input.email };
+            await sendMail({
+                to: input.email,
+                subject: renderTemplate(cfg.subject, vars),
+                text: renderTemplate(cfg.body, vars),
+            });
+        } catch (err) {
+            logger.warn({ err, to: input.email }, 'Auto-reply failed');
+        }
+    })();
+}
 
 export const submitPublicHandler: RequestHandler<unknown, unknown, PublicInquirySubmitInput> =
     async (req, res, next) => {
@@ -16,6 +41,7 @@ export const submitPublicHandler: RequestHandler<unknown, unknown, PublicInquiry
                 return;
             }
             const created = await inquiryService.submitPublic(req.body);
+            fireAutoReply(req.body);
             res.status(201).json({ id: created.id, createdAt: created.createdAt });
         } catch (err) {
             next(err);
