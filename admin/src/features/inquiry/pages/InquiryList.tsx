@@ -22,7 +22,6 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Tabs } from '@/components/ui/Tabs';
 import { Pagination } from '@/components/ui/Pagination';
-import { Avatar } from '@/components/ui/Avatar';
 import { DataTable } from '@/components/data/DataTable';
 import { KpiCard } from '@/components/data/KpiCard';
 import { StatusBadge } from '../StatusBadge';
@@ -104,23 +103,6 @@ export default function InquiryList() {
                 header: 'Status',
                 accessorKey: 'status',
                 cell: ({ getValue }) => <StatusBadge status={getValue() as InquiryStatus} />,
-            },
-            {
-                header: 'Assigned To',
-                accessorKey: 'assignedTo',
-                cell: ({ row }) => {
-                    const a = row.original.assignedTo;
-                    if (!a) return <span className="text-slate-300">—</span>;
-                    const display = a.name ?? a.email;
-                    return (
-                        <div className="flex items-center gap-2">
-                            <Avatar name={a.name} email={a.email} size="xs" />
-                            <span className="text-slate-700">
-                                {abbreviate(display)}
-                            </span>
-                        </div>
-                    );
-                },
             },
             {
                 id: 'chevron',
@@ -255,11 +237,5 @@ function formatHours(h: number): string {
     const hours = Math.floor(h);
     const minutes = Math.round((h - hours) * 60);
     return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
-}
-
-function abbreviate(name: string): string {
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0]!;
-    return `${parts[0]} ${parts[parts.length - 1]!.charAt(0).toUpperCase()}.`;
 }
 

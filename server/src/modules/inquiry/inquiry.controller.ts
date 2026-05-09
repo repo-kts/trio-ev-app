@@ -3,6 +3,7 @@ import * as inquiryService from './inquiry.service.js';
 import type {
     InquiryListQuery,
     InquiryNoteCreateInput,
+    InquiryReplyCreateInput,
     InquiryUpdateInput,
     PublicInquirySubmitInput,
 } from './inquiry.schema.js';
@@ -54,6 +55,17 @@ export const addNoteHandler: RequestHandler<{ id: string }, unknown, InquiryNote
         try {
             res.status(201).json(
                 await inquiryService.addNote(req.params.id, req.user!.sub, req.body),
+            );
+        } catch (err) {
+            next(err);
+        }
+    };
+
+export const sendReplyHandler: RequestHandler<{ id: string }, unknown, InquiryReplyCreateInput> =
+    async (req, res, next) => {
+        try {
+            res.status(201).json(
+                await inquiryService.sendReply(req.params.id, req.user!.sub, req.body),
             );
         } catch (err) {
             next(err);

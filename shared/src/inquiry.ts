@@ -61,6 +61,29 @@ export const inquiryNoteCreateSchema = z.object({
 });
 export type InquiryNoteCreateInput = z.infer<typeof inquiryNoteCreateSchema>;
 
+export const inquiryReplyCreateSchema = z.object({
+    subject: z.string().min(1).max(200),
+    body: z.string().min(1).max(20000),
+});
+export type InquiryReplyCreateInput = z.infer<typeof inquiryReplyCreateSchema>;
+
+export const inquiryReplySchema = z.object({
+    id: z.string(),
+    subject: z.string(),
+    body: z.string(),
+    authorId: z.string(),
+    author: z
+        .object({
+            id: z.string(),
+            name: z.string().nullable(),
+            email: z.string(),
+        })
+        .nullable()
+        .optional(),
+    sentAt: z.string(),
+});
+export type InquiryReply = z.infer<typeof inquiryReplySchema>;
+
 export const inquiryNoteSchema = z.object({
     id: z.string(),
     body: z.string(),
@@ -92,6 +115,7 @@ export const inquirySchema = z.object({
         .nullable()
         .optional(),
     notes: z.array(inquiryNoteSchema).optional(),
+    replies: z.array(inquiryReplySchema).optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });

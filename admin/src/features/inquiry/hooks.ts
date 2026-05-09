@@ -3,6 +3,7 @@ import type {
     Inquiry,
     InquiryListQuery,
     InquiryNoteCreateInput,
+    InquiryReplyCreateInput,
     InquiryUpdateInput,
 } from '@trio/shared/inquiry';
 import {
@@ -12,6 +13,7 @@ import {
     getInquiryStats,
     listAdmins,
     listInquiries,
+    sendInquiryReply,
     updateInquiry,
 } from './api';
 
@@ -92,6 +94,16 @@ export function useAddNoteMutation(id: string) {
         mutationFn: (body: InquiryNoteCreateInput) => addInquiryNote(id, body),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: inquiryKeys.detail(id) });
+        },
+    });
+}
+
+export function useSendReplyMutation(id: string) {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (body: InquiryReplyCreateInput) => sendInquiryReply(id, body),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: inquiryKeys.all });
         },
     });
 }
