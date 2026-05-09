@@ -46,40 +46,56 @@ model Visit {
 }
 
 model User {
-  id                 String        @id @default(cuid())
-  email              String        @unique
+  id                 String          @id @default(cuid())
+  email              String          @unique
   password           String
   name               String?
-  role               Role          @default(USER)
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  role               Role            @default(USER)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
-  assignedInquiries  Inquiry[]     @relation("InquiryAssignee")
-  authoredNotes      InquiryNote[] @relation("InquiryNoteAuthor")
-  posts              Post[]        @relation("PostAuthor")
-  uploadedMedia      Media[]       @relation("MediaUploader")
+  assignedInquiries  Inquiry[]       @relation("InquiryAssignee")
+  authoredNotes      InquiryNote[]   @relation("InquiryNoteAuthor")
+  authoredReplies    InquiryReply[]  @relation("InquiryReplyAuthor")
+  posts              Post[]          @relation("PostAuthor")
+  uploadedMedia      Media[]         @relation("MediaUploader")
 
   @@map("users")
 }
 
 model Inquiry {
-  id           String        @id @default(cuid())
+  id           String         @id @default(cuid())
   name         String
   email        String
   phone        String?
   subject      String
   message      String
-  status       InquiryStatus @default(NEW)
+  status       InquiryStatus  @default(NEW)
   source       String?
-  assignedTo   User?         @relation("InquiryAssignee", fields: [assignedToId], references: [id])
+  assignedTo   User?          @relation("InquiryAssignee", fields: [assignedToId], references: [id])
   assignedToId String?
   notes        InquiryNote[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  replies      InquiryReply[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   @@index([status, createdAt(sort: Desc)])
   @@index([assignedToId])
   @@map("inquiries")
+}
+
+model InquiryReply {
+  id         String   @id @default(cuid())
+  inquiry    Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  inquiryId  String
+  author     User     @relation("InquiryReplyAuthor", fields: [authorId], references: [id])
+  authorId   String
+  subject    String
+  body       String
+  sentAt     DateTime @default(now())
+
+  @@index([inquiryId, sentAt])
+  @@map("inquiry_replies")
 }
 
 model InquiryNote {

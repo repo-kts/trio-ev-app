@@ -5,6 +5,8 @@ import type {
     InquiryListResponse,
     InquiryNote,
     InquiryNoteCreateInput,
+    InquiryReply,
+    InquiryReplyCreateInput,
     InquiryStats,
     InquiryUpdateInput,
 } from '@trio/shared/inquiry';
@@ -32,6 +34,14 @@ export async function addInquiryNote(
     body: InquiryNoteCreateInput,
 ): Promise<InquiryNote> {
     const { data } = await api.post(`/api/admin/inquiries/${id}/notes`, body);
+    return data;
+}
+
+export async function sendInquiryReply(
+    id: string,
+    body: InquiryReplyCreateInput,
+): Promise<InquiryReply> {
+    const { data } = await api.post(`/api/admin/inquiries/${id}/replies`, body);
     return data;
 }
 

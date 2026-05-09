@@ -1,9 +1,12 @@
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { notFound } from '@/utils/http-error';
+import { notFound, badRequest } from '@/utils/http-error';
+import { sendMail, isMailerConfigured } from '@/lib/mailer';
+import { logger } from '@/lib/logger';
 import type {
     InquiryListQuery,
     InquiryNoteCreateInput,
+    InquiryReplyCreateInput,
     InquiryUpdateInput,
     PublicInquirySubmitInput,
 } from './inquiry.schema.js';
@@ -30,6 +33,15 @@ const noteSelect = {
     author: { select: { id: true, name: true, email: true } },
     createdAt: true,
 } satisfies Prisma.InquiryNoteSelect;
+
+const replySelect = {
+    id: true,
+    subject: true,
+    body: true,
+    authorId: true,
+    author: { select: { id: true, name: true, email: true } },
+    sentAt: true,
+} satisfies Prisma.InquiryReplySelect;
 
 export async function submitPublic(input: PublicInquirySubmitInput, source?: string) {
     return prisma.inquiry.create({
@@ -81,6 +93,7 @@ export async function getById(id: string) {
         select: {
             ...inquirySelect,
             notes: { select: noteSelect, orderBy: { createdAt: 'asc' } },
+            replies: { select: replySelect, orderBy: { sentAt: 'asc' } },
         },
     });
     if (!inquiry) throw notFound('Inquiry not found');
@@ -102,6 +115,53 @@ export async function addNote(inquiryId: string, authorId: string, input: Inquir
         data: { inquiryId, authorId, body: input.body },
         select: noteSelect,
     });
+}
+
+export async function sendReply(
+    inquiryId: string,
+    authorId: string,
+    input: InquiryReplyCreateInput,
+) {
+    const inquiry = await prisma.inquiry.findUnique({
+        where: { id: inquiryId },
+        select: { id: true, email: true, status: true },
+    });
+    if (!inquiry) throw notFound('Inquiry not found');
+
+    if (!isMailerConfigured()) {
+        logger.warn(
+            { inquiryId, to: inquiry.email, subject: input.subject },
+            'SMTP not configured — reply not sent',
+        );
+        throw badRequest('Email is not configured on the server');
+    }
+
+    await sendMail({
+        to: inquiry.email,
+        subject: input.subject,
+        text: input.body,
+    });
+
+    const [reply] = await prisma.$transaction([
+        prisma.inquiryReply.create({
+            data: {
+                inquiryId,
+                authorId,
+                subject: input.subject,
+                body: input.body,
+            },
+            select: replySelect,
+        }),
+        prisma.inquiry.update({
+            where: { id: inquiryId },
+            data:
+                inquiry.status === 'NEW' || inquiry.status === 'IN_REVIEW'
+                    ? { status: 'RESPONDED' }
+                    : {},
+        }),
+    ]);
+
+    return reply;
 }
 
 export async function getCounts() {

@@ -4,6 +4,7 @@ import { validate } from '@/middleware/validate';
 import {
     inquiryListQuerySchema,
     inquiryNoteCreateSchema,
+    inquiryReplyCreateSchema,
     inquiryUpdateSchema,
     publicInquirySubmitSchema,
 } from './inquiry.schema.js';
@@ -13,6 +14,7 @@ import {
     detailHandler,
     exportCsvHandler,
     listHandler,
+    sendReplyHandler,
     statsHandler,
     submitPublicHandler,
     updateHandler,
@@ -41,3 +43,4 @@ inquiryAdminRouter.get('/', validate(inquiryListQuerySchema, 'query'), listHandl
 inquiryAdminRouter.get('/:id', detailHandler);
 inquiryAdminRouter.patch('/:id', validate(inquiryUpdateSchema), updateHandler);
 inquiryAdminRouter.post('/:id/notes', validate(inquiryNoteCreateSchema), addNoteHandler);
+inquiryAdminRouter.post('/:id/replies', validate(inquiryReplyCreateSchema), sendReplyHandler);
