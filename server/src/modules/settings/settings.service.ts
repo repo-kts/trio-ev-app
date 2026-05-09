@@ -16,6 +16,9 @@ const select = {
     email: true,
     contactCtaUrl: true,
     socials: true,
+    autoReplyEnabled: true,
+    autoReplySubject: true,
+    autoReplyBody: true,
     createdAt: true,
     updatedAt: true,
 } satisfies Prisma.SiteSettingSelect;
@@ -51,4 +54,21 @@ export async function update(input: SiteSettingUpdateInput): Promise<SiteSetting
     }
     const row = await prisma.siteSetting.update({ where: { id }, data, select });
     return normalize(row);
+}
+
+export async function getAutoReply(): Promise<{
+    enabled: boolean;
+    subject: string;
+    body: string;
+}> {
+    const id = await ensureRow();
+    const row = await prisma.siteSetting.findUniqueOrThrow({
+        where: { id },
+        select: { autoReplyEnabled: true, autoReplySubject: true, autoReplyBody: true },
+    });
+    return {
+        enabled: row.autoReplyEnabled,
+        subject: row.autoReplySubject,
+        body: row.autoReplyBody,
+    };
 }
