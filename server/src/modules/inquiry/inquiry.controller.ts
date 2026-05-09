@@ -6,6 +6,8 @@ import { sendMail, isMailerConfigured } from '@/lib/mailer';
 import { logger } from '@/lib/logger';
 import { badRequest } from '@/utils/http-error';
 import type {
+    InquiryBulkIdsInput,
+    InquiryBulkStatusInput,
     InquiryListQuery,
     InquiryNoteCreateInput,
     InquiryReplyCreateInput,
@@ -118,6 +120,76 @@ export const sendAutoReplyHandler: RequestHandler<{ id: string }> = async (req, 
             body: renderTemplate(tpl.body, vars),
         });
         res.status(201).json(reply);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const bulkStatusHandler: RequestHandler<unknown, unknown, InquiryBulkStatusInput> = async (
+    req,
+    res,
+    next,
+) => {
+    try {
+        const result = await inquiryService.bulkUpdateStatus(req.body.ids, req.body.status);
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const bulkDeleteHandler: RequestHandler<unknown, unknown, InquiryBulkIdsInput> = async (
+    req,
+    res,
+    next,
+) => {
+    try {
+        const result = await inquiryService.bulkDelete(req.body.ids);
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const bulkAutoReplyHandler: RequestHandler<unknown, unknown, InquiryBulkIdsInput> = async (
+    req,
+    res,
+    next,
+) => {
+    try {
+        if (!isMailerConfigured()) {
+            throw badRequest('Email is not configured on the server');
+        }
+        const tpl = await autoReplyService.getActive();
+        if (!tpl) {
+            throw badRequest('No active auto-reply template');
+        }
+
+        let sent = 0;
+        let skipped = 0;
+        let failed = 0;
+
+        for (const id of req.body.ids) {
+            try {
+                const inquiry = await inquiryService.getById(id);
+                const vars = {
+                    name: inquiry.name,
+                    subject: inquiry.subject,
+                    email: inquiry.email,
+                };
+                await inquiryService.sendReply(id, req.user!.sub, {
+                    subject: renderTemplate(tpl.subject, vars),
+                    body: renderTemplate(tpl.body, vars),
+                });
+                sent += 1;
+            } catch (err) {
+                logger.warn({ err, inquiryId: id }, 'Bulk auto-reply: send failed');
+                if ((err as { status?: number })?.status === 404) skipped += 1;
+                else failed += 1;
+            }
+        }
+
+        res.json({ sent, skipped, failed });
     } catch (err) {
         next(err);
     }

@@ -109,6 +109,21 @@ export async function update(id: string, input: InquiryUpdateInput) {
     });
 }
 
+export async function bulkUpdateStatus(ids: string[], status: InquiryListQuery['status']) {
+    const result = await prisma.inquiry.updateMany({
+        where: { id: { in: ids } },
+        data: { status },
+    });
+    return { count: result.count };
+}
+
+export async function bulkDelete(ids: string[]) {
+    const result = await prisma.inquiry.deleteMany({
+        where: { id: { in: ids } },
+    });
+    return { count: result.count };
+}
+
 export async function addNote(inquiryId: string, authorId: string, input: InquiryNoteCreateInput) {
     await getById(inquiryId);
     return prisma.inquiryNote.create({

@@ -20,13 +20,23 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Tabs } from '@/components/ui/Tabs';
 import { Pagination } from '@/components/ui/Pagination';
-import { DataTable } from '@/components/data/DataTable';
+import { DataTable, type RowSelection } from '@/components/data/DataTable';
 import { KpiCard } from '@/components/data/KpiCard';
-import { StatusBadge } from '../StatusBadge';
 import { ReplyAllCard } from '../ReplyAllCard';
-import { useInquiriesQuery, useInquiryCountsQuery, useInquiryStatsQuery } from '../hooks';
+import { InlineStatusSelect } from '../InlineStatusSelect';
+import { BulkActionsBar } from '../BulkActionsBar';
+import {
+    useBulkAutoReplyMutation,
+    useBulkDeleteMutation,
+    useBulkStatusMutation,
+    useInquiriesQuery,
+    useInquiryCountsQuery,
+    useInquiryStatsQuery,
+    useUpdateInquiryMutation,
+} from '../hooks';
 import { buildExportUrl } from '../api';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { toast } from '@/hooks/useToast';
 import { InquiryDetailDrawer } from './InquiryDetail';
 
 const TAB_ORDER: (InquiryStatus | 'ALL')[] = ['ALL', ...INQUIRY_STATUSES];
@@ -40,6 +50,7 @@ export default function InquiryList() {
     const [tab, setTab] = useState<InquiryStatus | 'ALL'>('ALL');
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
+    const [selected, setSelected] = useState<Set<string>>(new Set());
 
     const debouncedSearch = useDebouncedValue(search, 300);
 
@@ -54,11 +65,78 @@ export default function InquiryList() {
     const stats = useInquiryStatsQuery();
     const counts = useInquiryCountsQuery();
 
+    const bulkStatus = useBulkStatusMutation();
+    const bulkDelete = useBulkDeleteMutation();
+    const bulkAutoReply = useBulkAutoReplyMutation();
+
     const tabItems = TAB_ORDER.map((value) => ({
         value,
         label: value === 'ALL' ? 'ALL' : value.replace('_', ' '),
         count: counts.data?.[value],
     }));
+
+    const items = query.data?.items ?? [];
+
+    const rowSelection: RowSelection<Inquiry> = {
+        selected,
+        getId: (row) => row.id,
+        onToggle: (id) =>
+            setSelected((prev) => {
+                const next = new Set(prev);
+                if (next.has(id)) next.delete(id);
+                else next.add(id);
+                return next;
+            }),
+        onToggleAll: (rows) =>
+            setSelected((prev) => {
+                const ids = rows.map((r) => r.id);
+                const allOn = ids.every((id) => prev.has(id));
+                const next = new Set(prev);
+                for (const id of ids) {
+                    if (allOn) next.delete(id);
+                    else next.add(id);
+                }
+                return next;
+            }),
+    };
+
+    const clearSelection = () => setSelected(new Set());
+
+    const onBulkStatus = async (status: InquiryStatus) => {
+        try {
+            const res = await bulkStatus.mutateAsync({ ids: Array.from(selected), status });
+            toast.success(`Updated ${res.count} inquir${res.count === 1 ? 'y' : 'ies'}`);
+            clearSelection();
+        } catch {
+            toast.error('Bulk status update failed');
+        }
+    };
+
+    const onBulkDelete = async () => {
+        if (!window.confirm(`Delete ${selected.size} inquiries? This cannot be undone.`)) return;
+        try {
+            const res = await bulkDelete.mutateAsync(Array.from(selected));
+            toast.success(`Deleted ${res.count} inquir${res.count === 1 ? 'y' : 'ies'}`);
+            clearSelection();
+        } catch {
+            toast.error('Bulk delete failed');
+        }
+    };
+
+    const onBulkAutoReply = async () => {
+        try {
+            const res = await bulkAutoReply.mutateAsync(Array.from(selected));
+            toast.success(
+                `Sent ${res.sent} · skipped ${res.skipped} · failed ${res.failed}`,
+            );
+            clearSelection();
+        } catch (err) {
+            const msg =
+                (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+                'Bulk auto-reply failed';
+            toast.error(msg);
+        }
+    };
 
     const columns = useMemo<ColumnDef<Inquiry, unknown>[]>(
         () => [
@@ -101,7 +179,7 @@ export default function InquiryList() {
             {
                 header: 'Status',
                 accessorKey: 'status',
-                cell: ({ getValue }) => <StatusBadge status={getValue() as InquiryStatus} />,
+                cell: ({ row }) => <StatusCell row={row.original} />,
             },
             {
                 id: 'chevron',
@@ -111,6 +189,8 @@ export default function InquiryList() {
         ],
         [],
     );
+
+    const busy = bulkStatus.isPending || bulkDelete.isPending || bulkAutoReply.isPending;
 
     return (
         <>
@@ -145,6 +225,7 @@ export default function InquiryList() {
                         onChange={(v) => {
                             setTab(v);
                             setPage(1);
+                            clearSelection();
                         }}
                         className="flex-1 border-b-0"
                     />
@@ -174,14 +255,27 @@ export default function InquiryList() {
                     </div>
                 </div>
                 <div className="border-b border-slate-200" />
+                <div className="px-3 pt-3">
+                    {selected.size > 0 && (
+                        <BulkActionsBar
+                            count={selected.size}
+                            busy={busy}
+                            onClear={clearSelection}
+                            onSetStatus={onBulkStatus}
+                            onDelete={onBulkDelete}
+                            onSendAutoReply={onBulkAutoReply}
+                        />
+                    )}
+                </div>
                 <div className="px-2 py-2">
                     <DataTable
-                        data={query.data?.items ?? []}
+                        data={items}
                         columns={columns}
                         isLoading={query.isLoading}
                         onRowClick={(row) => nav(`/inquiries/${row.id}`)}
                         emptyTitle="No inquiries match your filters"
                         className="rounded-none border-0"
+                        selection={rowSelection}
                     />
                 </div>
                 <div className="border-t border-slate-200 px-5 py-3">
@@ -203,8 +297,26 @@ export default function InquiryList() {
     );
 }
 
+function StatusCell({ row }: { row: Inquiry }) {
+    const updateMutation = useUpdateInquiryMutation(row.id);
+    return (
+        <InlineStatusSelect
+            value={row.status}
+            disabled={updateMutation.isPending}
+            onChange={(status) =>
+                updateMutation.mutate(
+                    { status },
+                    {
+                        onError: () => toast.error('Could not update status'),
+                        onSuccess: () => toast.success('Status updated'),
+                    },
+                )
+            }
+        />
+    );
+}
+
 function fmtNumber(n: number | undefined): string {
     if (n == null) return '—';
     return n.toLocaleString();
 }
-

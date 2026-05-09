@@ -1,5 +1,6 @@
 import type {
     Inquiry,
+    InquiryBulkResult,
     InquiryCounts,
     InquiryListQuery,
     InquiryListResponse,
@@ -8,6 +9,7 @@ import type {
     InquiryReply,
     InquiryReplyCreateInput,
     InquiryStats,
+    InquiryStatus,
     InquiryUpdateInput,
 } from '@trio/shared/inquiry';
 import { api } from '@/lib/axios';
@@ -42,6 +44,24 @@ export async function sendInquiryReply(
     body: InquiryReplyCreateInput,
 ): Promise<InquiryReply> {
     const { data } = await api.post(`/api/admin/inquiries/${id}/replies`, body);
+    return data;
+}
+
+export async function bulkUpdateStatus(
+    ids: string[],
+    status: InquiryStatus,
+): Promise<{ count: number }> {
+    const { data } = await api.patch('/api/admin/inquiries/bulk-status', { ids, status });
+    return data;
+}
+
+export async function bulkDelete(ids: string[]): Promise<{ count: number }> {
+    const { data } = await api.delete('/api/admin/inquiries/bulk', { data: { ids } });
+    return data;
+}
+
+export async function bulkAutoReply(ids: string[]): Promise<InquiryBulkResult> {
+    const { data } = await api.post('/api/admin/inquiries/bulk-auto-reply', { ids });
     return data;
 }
 
