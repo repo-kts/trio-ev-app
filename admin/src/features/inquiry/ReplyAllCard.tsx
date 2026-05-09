@@ -1,49 +1,33 @@
-import { useEffect, useState } from 'react';
-import { Pencil, MailCheck } from 'lucide-react';
-import { Modal } from '@/components/ui/Modal';
+import { useState } from 'react';
+import { MailCheck, Settings2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { cn } from '@/lib/cn';
 import { toast } from '@/hooks/useToast';
 import { useSettingsQuery, useUpdateSettingsMutation } from '@/features/settings/hooks';
+import { useTemplatesQuery } from '@/features/auto-reply/hooks';
+import { TemplatesManagerModal } from '@/features/auto-reply/TemplatesManager';
 
 export function ReplyAllCard() {
-    const query = useSettingsQuery();
+    const settings = useSettingsQuery();
     const update = useUpdateSettingsMutation();
+    const templates = useTemplatesQuery();
+    const [open, setOpen] = useState(false);
 
-    const [editOpen, setEditOpen] = useState(false);
-    const [draftSubject, setDraftSubject] = useState('');
-    const [draftBody, setDraftBody] = useState('');
-
-    useEffect(() => {
-        if (!query.data) return;
-        setDraftSubject(query.data.autoReplySubject);
-        setDraftBody(query.data.autoReplyBody);
-    }, [query.data]);
-
-    const enabled = query.data?.autoReplyEnabled ?? false;
+    const enabled = settings.data?.autoReplyEnabled ?? false;
+    const activeTpl = (templates.data ?? []).find((t) => t.active);
 
     const onToggle = async () => {
-        if (!query.data) return;
+        if (!settings.data) return;
+        if (!enabled && !activeTpl) {
+            toast.error('Activate a template first');
+            setOpen(true);
+            return;
+        }
         try {
             await update.mutateAsync({ autoReplyEnabled: !enabled });
             toast.success(!enabled ? 'Auto-reply enabled' : 'Auto-reply disabled');
         } catch {
             toast.error('Could not update auto-reply');
-        }
-    };
-
-    const onSave = async () => {
-        try {
-            await update.mutateAsync({
-                autoReplySubject: draftSubject.trim(),
-                autoReplyBody: draftBody.trim(),
-            });
-            toast.success('Auto-reply updated');
-            setEditOpen(false);
-        } catch {
-            toast.error('Could not save auto-reply');
         }
     };
 
@@ -66,56 +50,24 @@ export function ReplyAllCard() {
                     <p className="mt-0.5 text-sm font-semibold text-slate-900">
                         {enabled ? 'Auto-reply ON' : 'Auto-reply OFF'}
                     </p>
-                    <button
-                        type="button"
-                        onClick={() => setEditOpen(true)}
-                        className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 hover:text-emerald-700"
-                    >
-                        <Pencil className="h-3 w-3" />
-                        Edit message
-                    </button>
-                </div>
-            </div>
-
-            <Modal
-                open={editOpen}
-                onClose={() => setEditOpen(false)}
-                title="Edit auto-reply message"
-            >
-                <div className="space-y-3">
-                    <p className="text-xs text-slate-500">
-                        Sent to inquirers when Reply All is ON. Use <code>{'{{name}}'}</code> and{' '}
-                        <code>{'{{subject}}'}</code> to personalise.
-                    </p>
-                    <label className="block space-y-1">
-                        <span className="text-xs font-medium text-slate-600">Subject</span>
-                        <Input
-                            value={draftSubject}
-                            onChange={(e) => setDraftSubject(e.target.value)}
-                        />
-                    </label>
-                    <label className="block space-y-1">
-                        <span className="text-xs font-medium text-slate-600">Body</span>
-                        <Textarea
-                            rows={8}
-                            value={draftBody}
-                            onChange={(e) => setDraftBody(e.target.value)}
-                        />
-                    </label>
-                    <div className="flex justify-end gap-2 pt-1">
-                        <Button variant="ghost" onClick={() => setEditOpen(false)}>
-                            Cancel
-                        </Button>
+                    <div className="mt-1 flex items-center gap-2">
+                        <span className="truncate text-[11px] text-slate-500">
+                            Active: {activeTpl?.name ?? 'none'}
+                        </span>
                         <Button
-                            onClick={onSave}
-                            loading={update.isPending}
-                            disabled={!draftSubject.trim() || !draftBody.trim()}
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-[11px]"
+                            onClick={() => setOpen(true)}
                         >
-                            Save
+                            <Settings2 className="h-3 w-3" />
+                            Manage templates
                         </Button>
                     </div>
                 </div>
-            </Modal>
+            </div>
+
+            <TemplatesManagerModal open={open} onClose={() => setOpen(false)} />
         </>
     );
 }
