@@ -8,12 +8,18 @@ interface Props {
 
 export function PageHeader({ title, description, actions }: Props) {
     return (
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3 pt-6">
-            <div>
-                <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
-                {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+        <div className="mb-6 flex flex-col gap-3 pt-6 sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:pt-8">
+            <div className="min-w-0">
+                <h1 className="truncate text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+                    {title}
+                </h1>
+                {description && (
+                    <p className="mt-1 text-sm text-slate-500">{description}</p>
+                )}
             </div>
-            {actions && <div className="flex items-center gap-2">{actions}</div>}
+            {actions && (
+                <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>
+            )}
         </div>
     );
 }
