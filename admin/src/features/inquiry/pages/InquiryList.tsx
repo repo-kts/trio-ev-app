@@ -12,12 +12,11 @@ import {
     ChevronRight,
     Download,
     MessageSquare,
-    Search,
     UserPlus,
 } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { SearchInput } from '@/components/ui/SearchInput';
 import { Tabs } from '@/components/ui/Tabs';
 import { Pagination } from '@/components/ui/Pagination';
 import { DataTable, type RowSelection } from '@/components/data/DataTable';
@@ -229,28 +228,26 @@ export default function InquiryList() {
                         }}
                         className="flex-1 border-b-0"
                     />
-                    <div className="flex flex-wrap items-center gap-2">
-                        <div className="relative">
-                            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                            <Input
-                                placeholder="Search by name, email or subject…"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                                className="w-72 pl-9"
-                            />
-                        </div>
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+                        <SearchInput
+                            placeholder="Search inquiries…"
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                            wrapperClassName="flex-1 min-w-[200px] sm:w-64 sm:flex-none"
+                        />
                         <a
                             href={buildExportUrl({
                                 ...(tab !== 'ALL' && { status: tab }),
                                 ...(debouncedSearch && { q: debouncedSearch }),
                             })}
-                            className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
                         >
-                            <Download className="h-4 w-4" />
-                            Export CSV
+                            <Download className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Export CSV</span>
+                            <span className="sm:hidden">CSV</span>
                         </a>
                     </div>
                 </div>

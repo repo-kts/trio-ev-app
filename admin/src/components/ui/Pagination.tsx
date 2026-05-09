@@ -21,6 +21,9 @@ function buildPageList(page: number, totalPages: number): (number | 'ellipsis')[
     return result;
 }
 
+const navBtn =
+    'inline-flex h-8 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50';
+
 export function Pagination({ page, total, limit, onChange, className }: Props) {
     const totalPages = Math.max(1, Math.ceil(total / limit));
     const start = total === 0 ? 0 : (page - 1) * limit + 1;
@@ -28,23 +31,30 @@ export function Pagination({ page, total, limit, onChange, className }: Props) {
     const pages = buildPageList(page, totalPages);
 
     return (
-        <div className={cn('flex flex-wrap items-center justify-between gap-3 px-1', className)}>
-            <p className="text-xs text-slate-500">
-                Showing {start} to {end} of {total} results
+        <div
+            className={cn(
+                'flex flex-col items-start gap-3 px-1 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between',
+                className,
+            )}
+        >
+            <p className="text-xs tabular-nums text-slate-500">
+                Showing <span className="font-medium text-slate-700">{start}</span>–
+                <span className="font-medium text-slate-700">{end}</span> of{' '}
+                <span className="font-medium text-slate-700">{total}</span>
             </p>
             <nav className="flex items-center gap-1" aria-label="Pagination">
                 <button
                     type="button"
                     onClick={() => onChange(Math.max(1, page - 1))}
                     disabled={page <= 1}
-                    className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200 px-3 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={navBtn}
                 >
                     <ChevronLeft className="h-3.5 w-3.5" />
-                    Previous
+                    <span className="hidden sm:inline">Previous</span>
                 </button>
                 {pages.map((p, idx) =>
                     p === 'ellipsis' ? (
-                        <span key={`e${idx}`} className="px-2 text-xs text-slate-400">
+                        <span key={`e${idx}`} className="px-1.5 text-xs text-slate-400">
                             …
                         </span>
                     ) : (
@@ -54,10 +64,10 @@ export function Pagination({ page, total, limit, onChange, className }: Props) {
                             onClick={() => onChange(p)}
                             aria-current={p === page ? 'page' : undefined}
                             className={cn(
-                                'h-8 w-8 rounded-md text-xs font-medium transition',
+                                'h-8 min-w-[32px] rounded-lg px-2 text-xs font-medium tabular-nums transition-colors',
                                 p === page
-                                    ? 'bg-emerald-500 text-white'
-                                    : 'text-slate-600 hover:bg-slate-100',
+                                    ? 'bg-slate-900 text-white shadow-[0_1px_2px_rgba(15,23,42,0.2)]'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
                             )}
                         >
                             {p}
@@ -68,9 +78,9 @@ export function Pagination({ page, total, limit, onChange, className }: Props) {
                     type="button"
                     onClick={() => onChange(Math.min(totalPages, page + 1))}
                     disabled={page >= totalPages}
-                    className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200 px-3 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={navBtn}
                 >
-                    Next
+                    <span className="hidden sm:inline">Next</span>
                     <ChevronRight className="h-3.5 w-3.5" />
                 </button>
             </nav>
