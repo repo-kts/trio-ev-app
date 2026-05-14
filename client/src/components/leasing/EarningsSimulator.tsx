@@ -132,17 +132,17 @@ export function EarningsSimulator() {
                     className="flex flex-col gap-5"
                 >
                     {/* Monthly earnings */}
-                    <div className="flex-1 p-8 md:p-10 rounded-3xl border border-white/8 bg-secondary/15 flex flex-col justify-between">
+                    <div className="p-8 md:p-10 rounded-3xl border border-white/8 bg-secondary/15 flex flex-col justify-between">
                         <span className="font-sans text-[10px] uppercase tracking-[0.18em] text-textPrimary/40 mb-4 block">
                             Monthly Net Earnings
                         </span>
                         <motion.div
                             key={dispMonthly}
-                            className="font-heading text-[clamp(36px,6vw,64px)] leading-none text-accent"
+                            className="font-heading text-[36px] md:text-[clamp(40px,5vw,64px)] leading-none text-accent"
                         >
                             {fmt(dispMonthly)}
                         </motion.div>
-                        <div className="mt-4 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div className="mt-6 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                             <motion.div
                                 animate={{ width: `${Math.min((monthlyNet / 200000) * 100, 100)}%` }}
                                 transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -152,18 +152,19 @@ export function EarningsSimulator() {
                     </div>
 
                     {/* Annual returns */}
-                    <div className="flex-1 p-8 md:p-10 rounded-3xl border border-accent/20 bg-accent/5 flex flex-col justify-between">
+                    <div className="p-8 md:p-10 rounded-3xl border border-accent/20 bg-accent/5 flex flex-col justify-between">
                         <span className="font-sans text-[10px] uppercase tracking-[0.18em] text-accent/60 mb-4 block">
                             Annual Returns
                         </span>
-                        <motion.div className="font-heading text-[clamp(36px,6vw,64px)] leading-none text-accent">
+                        <motion.div className="font-heading text-[36px] md:text-[clamp(40px,5vw,64px)] leading-none text-accent">
                             {fmt(dispAnnual)}
                         </motion.div>
-                        <div className="mt-4 flex items-center gap-3">
-                            <div className="font-heading text-2xl text-accent">{dispRoi}%</div>
-                            <span className="text-xs text-textPrimary/40 font-sans uppercase tracking-widest">ROI</span>
+                        <div className="mt-6 flex items-center gap-3">
+                            <div className="font-heading text-2xl md:text-3xl text-accent">{dispRoi}%</div>
+                            <span className="text-[10px] md:text-xs text-textPrimary/40 font-sans uppercase tracking-widest">ROI</span>
                         </div>
                     </div>
+
 
                     {/* CTA */}
                     <motion.button

@@ -1,6 +1,7 @@
 import { motion, useAnimationFrame } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { BarChart3, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Ticker items scrolling at the bottom of the hero
 const TICKER = [
@@ -68,7 +69,7 @@ export function LeasingHero() {
             />
 
             {/* ── MAIN BODY ── */}
-            <div className="relative z-10 flex flex-col lg:flex-row flex-1 max-w-7xl mx-auto w-full px-6 md:px-12 pt-36 pb-0 gap-12 lg:gap-20">
+            <div className="relative z-10 flex flex-col lg:flex-row flex-1 max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-28 sm:pt-32 md:pt-36 pb-0 gap-10 sm:gap-12 lg:gap-20">
 
                 {/* ── LEFT: Headline Block ── */}
                 <div className="flex-1 flex flex-col justify-center">
@@ -78,15 +79,15 @@ export function LeasingHero() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex items-center gap-3 mb-10"
+                        className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 sm:mb-10"
                     >
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/5">
+                        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/5">
                             <PulseDot />
-                            <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">Live Operations · 3 Cities</span>
+                            <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-accent">Live Operations · 3 Cities</span>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/8 bg-secondary/20">
                             <BarChart3 size={11} className="text-textPrimary/40" />
-                            <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-textPrimary/40">Enterprise Fleet Solutions</span>
+                            <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-textPrimary/40">Enterprise Fleet Solutions</span>
                         </div>
                     </motion.div>
 
@@ -119,19 +120,20 @@ export function LeasingHero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7, delay: 0.5 }}
-                        className="flex flex-wrap gap-4 items-center"
+                        className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 sm:items-center"
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.04 }}
-                            whileTap={{ scale: 0.97 }}
-                            className="group flex items-center gap-3 px-8 py-4 bg-accent text-background font-black uppercase tracking-widest rounded-full text-xs shadow-[0_0_40px_rgba(92,240,158,0.25)] hover:shadow-[0_0_60px_rgba(92,240,158,0.4)] transition-all duration-300"
-                        >
-                            Get a Custom Plan
-                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                        </motion.button>
+                        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                            <Link
+                                to="/contact"
+                                className="group flex items-center justify-center gap-3 px-7 sm:px-8 py-3.5 sm:py-4 bg-accent text-background font-black uppercase tracking-widest rounded-full text-[11px] sm:text-xs shadow-[0_0_40px_rgba(92,240,158,0.25)] hover:shadow-[0_0_60px_rgba(92,240,158,0.4)] transition-all duration-300"
+                            >
+                                Get a Custom Plan
+                                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </motion.div>
                         <motion.button
                             whileHover={{ scale: 1.03 }}
-                            className="px-8 py-4 bg-white/5 border border-white/10 text-textPrimary font-bold uppercase tracking-widest rounded-full text-xs hover:bg-white/10 transition-all"
+                            className="hidden md:block px-7 sm:px-8 py-3.5 sm:py-4 bg-white/5 border border-white/10 text-textPrimary font-bold uppercase tracking-widest rounded-full text-[11px] sm:text-xs hover:bg-white/10 transition-all"
                         >
                             View Fleet Options
                         </motion.button>
@@ -142,7 +144,7 @@ export function LeasingHero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
-                        className="flex gap-10 mt-16 pt-8 border-t border-white/5"
+                        className="hidden lg:flex flex-wrap gap-6 sm:gap-10 mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-white/5"
                     >
                         {[
                             { v: '240+', l: 'EVs Active' },
@@ -157,12 +159,122 @@ export function LeasingHero() {
                     </motion.div>
                 </div>
 
-                {/* ── RIGHT: Live Dashboard Panel ── */}
+                {/* ── MOBILE: bento-style dashboard ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="lg:hidden w-full pb-12"
+                >
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-textPrimary/35">
+                            Live Dashboard
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                            <PulseDot delay={0.5} />
+                            <span className="font-sans text-[9px] text-accent/60 uppercase tracking-widest">Live</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 grid-rows-[auto_auto_auto] gap-3">
+                        {/* Big accent hero tile — Revenue Today (col-span-2) */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.6 }}
+                            className="col-span-2 relative rounded-3xl bg-accent p-6 overflow-hidden flex flex-col justify-between min-h-[160px]"
+                        >
+                            <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-black/5 blur-3xl pointer-events-none" />
+                            <div className="absolute top-4 right-5 opacity-10">
+                                <span className="font-heading text-7xl font-black leading-none text-black">01</span>
+                            </div>
+                            <div className="relative">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-black/45 font-bold">— Revenue Today</span>
+                                </div>
+                            </div>
+                            <div className="relative">
+                                <div className="flex items-end gap-2">
+                                    <span className="font-heading text-5xl text-black leading-none">₹5.8L</span>
+                                    <span className="font-sans text-[10px] text-black/45 uppercase mb-1">est.</span>
+                                </div>
+                                <div className="mt-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-black/10 font-sans text-[9px] uppercase tracking-widest text-black font-bold">
+                                    ↑ trending
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Avg Trip Utilisation */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.7 }}
+                            className="rounded-2xl border border-white/8 bg-secondary/30 p-4 flex flex-col justify-between min-h-[140px]"
+                        >
+                            <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-textPrimary/35">— 02</span>
+                            <div>
+                                <div className="font-heading text-3xl text-textPrimary leading-none">87%</div>
+                                <div className="font-sans text-[9px] uppercase tracking-[0.2em] text-textPrimary/40 mt-2">Avg Utilisation</div>
+                                <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 font-sans text-[8px] uppercase tracking-widest text-textPrimary/40">
+                                    → stable
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Investor Returns */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.8 }}
+                            className="rounded-2xl border border-white/8 bg-secondary/30 p-4 flex flex-col justify-between min-h-[140px]"
+                        >
+                            <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-textPrimary/35">— 03</span>
+                            <div>
+                                <div className="font-heading text-3xl text-textPrimary leading-none">21.4%</div>
+                                <div className="font-sans text-[9px] uppercase tracking-[0.2em] text-textPrimary/40 mt-2">Avg ROI</div>
+                                <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-accent/10 font-sans text-[8px] uppercase tracking-widest text-accent">
+                                    ↑ trending
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Bar chart — last 7 days (col-span-2) */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.9 }}
+                            className="col-span-2 rounded-2xl border border-white/8 bg-secondary/20 p-5"
+                        >
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-textPrimary/35">— 04 · Last 7 Days</span>
+                                <span className="font-sans text-[9px] uppercase tracking-widest text-accent/60">Revenue</span>
+                            </div>
+                            <div className="flex items-end gap-2 h-16">
+                                {[55, 72, 63, 88, 74, 92, 100].map((h, j) => (
+                                    <motion.div
+                                        key={j}
+                                        initial={{ height: 0 }}
+                                        animate={{ height: `${h}%` }}
+                                        transition={{ duration: 0.7, delay: 1 + j * 0.07, ease: 'easeOut' }}
+                                        className={`flex-1 rounded-md ${j === 6 ? 'bg-accent' : 'bg-accent/25'}`}
+                                    />
+                                ))}
+                            </div>
+                            <div className="flex justify-between mt-2">
+                                {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, j) => (
+                                    <span key={j} className={`flex-1 text-center font-sans text-[8px] uppercase ${j === 6 ? 'text-accent' : 'text-textPrimary/20'}`}>{d}</span>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </div>
+                </motion.div>
+
+                {/* ── DESKTOP/TABLET: original Live Dashboard Panel ── */}
                 <motion.div
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="lg:w-[400px] xl:w-[440px] flex flex-col gap-4 pb-20 lg:pt-4"
+                    className="hidden lg:flex lg:w-[400px] xl:w-[440px] flex-col gap-4 pb-20 lg:pt-4"
                 >
                     {/* Panel header */}
                     <div className="flex items-center justify-between mb-2">

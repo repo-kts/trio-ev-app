@@ -15,36 +15,36 @@ export function RentalsHero() {
             />
 
             {/* Content */}
-            <div className="relative z-10 flex flex-col items-center text-center px-6 mt-16 max-w-5xl mx-auto">
-                <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mb-6 overflow-hidden">
+            <div className="relative z-10 flex flex-col items-center text-center px-5 sm:px-6 mt-12 sm:mt-16 max-w-5xl mx-auto">
+                <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mb-5 sm:mb-6 overflow-hidden">
                     {text.map((word, i) => (
                         <motion.span
                             key={i}
                             initial={{ y: '100%', opacity: 0, filter: 'blur(10px)' }}
                             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
                             transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                            className="font-heading text-5xl md:text-7xl font-bold uppercase tracking-tight text-textPrimary leading-none"
+                            className="font-heading text-[2.25rem] sm:text-5xl md:text-7xl font-bold uppercase tracking-tight text-textPrimary leading-none"
                         >
                             {word}
                         </motion.span>
                     ))}
                 </div>
-                
+
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="text-lg md:text-xl text-textPrimary/70 mb-10 max-w-2xl font-sans"
+                    className="text-base sm:text-lg md:text-xl text-textPrimary/70 mb-8 sm:mb-10 max-w-2xl font-sans px-2"
                 >
                     Instant electric mobility at your fingertips.
                 </motion.p>
-                
+
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8, duration: 0.5 }}
                 >
-                    <button className="px-10 py-4 bg-accent text-background font-bold rounded-full text-lg hover:bg-accent/90 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(92,240,158,0.4)]">
+                    <button className="px-8 sm:px-10 py-3.5 sm:py-4 bg-accent text-background font-bold rounded-full text-base sm:text-lg hover:bg-accent/90 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(92,240,158,0.4)]">
                         Book Now
                     </button>
                 </motion.div>

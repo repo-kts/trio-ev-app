@@ -38,7 +38,7 @@ const benefits = [
 
 export function InvestorBenefits() {
     return (
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
+        <section className="hidden md:block py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}

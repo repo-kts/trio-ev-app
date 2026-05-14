@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { LeasingHero } from '../components/leasing/LeasingHero';
 import { ValuePropSection } from '../components/leasing/ValuePropSection';
 import { RevenueEngine } from '../components/leasing/RevenueEngine';
@@ -40,15 +41,18 @@ export function Leasing() {
             <FleetUseCases />
 
             {/* <IndiaNetworkMap /> */}
-
-            {/* Final CTA */}
-            <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">
+            
+            {/* Final CTA - Desktop Only */}
+            <div className="hidden md:block py-32 px-6 text-center border-t border-white/5 bg-secondary/5">
                 <h2 className="text-4xl md:text-5xl font-heading font-bold mb-8 tracking-tight">
                     Ready to <span className="text-accent">scale?</span>
                 </h2>
-                <button className="px-12 py-5 bg-accent text-background font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(92,240,158,0.2)] text-xs">
+                <Link
+                    to="/contact"
+                    className="inline-block px-12 py-5 bg-accent text-background font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(92,240,158,0.2)] text-xs"
+                >
                     Get a Custom Plan
-                </button>
+                </Link>
             </div>
         </motion.div>
     );

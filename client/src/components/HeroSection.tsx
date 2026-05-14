@@ -33,54 +33,56 @@ export function HeroSection() {
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none z-0" />
 
             {/* Main Content */}
-            <div className="relative z-10 flex flex-col items-start text-left px-8 md:px-12 lg:px-24 w-full mt-16 max-w-7xl">
+            <div className="relative z-10 flex flex-col items-start text-left px-7 sm:px-12 md:px-16 lg:px-24 w-full mt-16 sm:mt-16 max-w-7xl">
 
                 {/* Small Top Badge */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-white/10 backdrop-blur-md mb-6"
+                    className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-secondary/30 border border-white/5 backdrop-blur-xl mb-5"
                 >
-                    <span className="relative flex h-2 w-2">
+                    <span className="relative flex h-1 w-1">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                        <span className="relative inline-flex rounded-full h-1 w-1 bg-accent"></span>
                     </span>
-                    <span className="text-xs font-sans tracking-widest uppercase text-textPrimary/80">City = trio.ev</span>
+                    <span className="text-[9px] font-sans tracking-[0.2em] uppercase text-textPrimary/50">City = trio.ev</span>
                 </motion.div>
 
-                <div className="flex flex-wrap justify-start gap-x-4 gap-y-1 mb-6 overflow-hidden max-w-3xl">
-                    {text.map((word, i) => (
-                        <motion.span
-                            key={i}
-                            initial={{ y: '100%', opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                            className="font-heading text-4xl md:text-6xl lg:text-[4.5rem] font-bold uppercase tracking-tight text-textPrimary leading-none"
-                        >
-                            {word}
-                        </motion.span>
-                    ))}
+                <div className="flex flex-col mb-5">
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="font-heading text-[2.1rem] sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tight text-textPrimary leading-[0.95]"
+                    >
+                        Cities Move <br />
+                        <span className="text-accent">Electric</span>
+                    </motion.h1>
                 </div>
 
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8, duration: 0.8 }}
-                    className="text-sm md:text-base text-textPrimary/70 mb-10 max-w-md font-sans"
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                    className="text-[13px] sm:text-base text-textPrimary/50 mb-8 max-w-[260px] sm:max-w-md font-sans leading-relaxed"
                 >
-                    Not a platform. Not an aggregator. Eastern India's intelligently operated electric mobility network — built to move cities. We are not on the map. We are the map.                </motion.p>
+                    Not a platform. Not an aggregator. Eastern India's intelligently operated electric mobility network.
+                </motion.p>
 
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1, duration: 0.5 }}
-                    className="flex flex-col sm:flex-row gap-4 origin-left"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                    className="flex flex-row gap-3 w-full sm:w-auto"
                 >
-                    <button className="px-6 py-3 bg-accent text-background font-bold rounded-full text-base hover:bg-accent/90 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(92,240,158,0.3)]">
+                    <button 
+                        onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="w-fit sm:w-auto px-6 py-2.5 bg-accent text-background font-bold rounded-full text-[11px] uppercase tracking-wider hover:bg-accent/90 transition-all active:scale-95 shadow-lg"
+                    >
                         Explore Services
                     </button>
-                    <button className="px-6 py-3 bg-secondary/40 backdrop-blur-md border border-white/10 text-textPrimary font-bold rounded-full text-base hover:bg-secondary transition-transform hover:scale-105 active:scale-95">
+                    <button className="hidden sm:block whitespace-nowrap px-5 py-2.5 bg-white/5 backdrop-blur-xl border border-white/10 text-textPrimary font-bold rounded-full text-[11px] uppercase tracking-wider hover:bg-white/10 transition-all active:scale-95">
                         Get Started
                     </button>
                 </motion.div>
