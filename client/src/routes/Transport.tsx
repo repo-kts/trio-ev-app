@@ -33,8 +33,10 @@ export function Transport() {
             {/* Efficiency Dashboard */}
             <EfficiencyDashboard />
 
-            {/* Why Companies Choose */}
-            <WhyCompaniesChoose />
+            {/* Why Companies Choose — desktop only */}
+            <div className="hidden md:block">
+                <WhyCompaniesChoose />
+            </div>
 
             {/* Transport Features (Safety, Sanity, etc.) */}
             <TransportFeatures />
@@ -48,11 +50,11 @@ export function Transport() {
             {/* <IndiaNetworkMap /> */}
 
             {/* Final CTA */}
-            <div className="py-32 px-6 text-center border-t border-white/5 bg-secondary/5">
-                <h2 className="text-4xl md:text-5xl font-heading font-bold mb-8 tracking-tight">
+            <div className="py-20 md:py-32 px-5 md:px-6 text-center border-t border-white/5 bg-secondary/5">
+                <h2 className="text-[2rem] md:text-5xl font-heading font-bold mb-6 md:mb-8 tracking-tight leading-[0.95]">
                     Ready to <span className="text-accent">automate?</span>
                 </h2>
-                <button className="px-12 py-5 bg-accent text-background font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(92,240,158,0.2)] text-[11px]">
+                <button className="w-full md:w-auto px-7 md:px-12 py-4 md:py-5 bg-accent text-background font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(92,240,158,0.2)] text-[11px]">
                     Request System Demo
                 </button>
             </div>

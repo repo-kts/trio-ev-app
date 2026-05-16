@@ -28,7 +28,6 @@ const benefits = [
 function FloatingCard({
     item,
     index,
-    rotation,
     parallaxOffset,
     className,
     featured = false,
@@ -36,7 +35,7 @@ function FloatingCard({
 }: {
     item: typeof benefits[number];
     index: number;
-    rotation: number;
+    rotation?: number;
     parallaxOffset: number;
     className?: string;
     featured?: boolean;

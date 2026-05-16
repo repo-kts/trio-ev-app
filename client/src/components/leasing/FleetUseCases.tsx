@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Users, Navigation, CheckCircle2, Activity } from 'lucide-react';
+import { Building2, Users, Navigation } from 'lucide-react';
 
 const useCases = [
     {

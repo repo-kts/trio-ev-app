@@ -43,16 +43,21 @@ const liveTrips = [
 
 export function EfficiencyDashboard() {
     return (
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
+        <section className="py-16 md:py-20 px-5 md:px-12 max-w-7xl mx-auto w-full">
+            {/* Mobile tag */}
+            <div className="md:hidden flex items-center gap-2 mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">Live Ops</span>
+            </div>
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.7 }}
-                className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8"
+                className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-12 gap-5 md:gap-8"
             >
-                <h2 className="font-heading text-[clamp(36px,5vw,72px)] leading-[0.9] uppercase text-textPrimary">
+                <h2 className="font-heading text-[2rem] md:text-[clamp(36px,5vw,72px)] leading-[0.95] md:leading-[0.9] uppercase text-textPrimary">
                     Efficiency<br />
                     <span className="text-accent">dashboard.</span>
                 </h2>
@@ -62,7 +67,7 @@ export function EfficiencyDashboard() {
             </motion.div>
 
             {/* Metric counters */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-6 md:mb-8">
                 {metrics.map((m, i) => {
                     const { val, ref } = useCount(m.target, 1200 + i * 150);
                     return (
@@ -73,7 +78,7 @@ export function EfficiencyDashboard() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.55, delay: i * 0.1 }}
-                            className="p-7 rounded-2xl border border-white/8 bg-secondary/15 flex flex-col gap-2 relative overflow-hidden"
+                            className="p-4 md:p-7 rounded-2xl border border-white/8 bg-secondary/15 flex flex-col gap-1.5 md:gap-2 relative overflow-hidden"
                         >
                             {/* Animated bottom bar */}
                             <motion.div
@@ -84,7 +89,7 @@ export function EfficiencyDashboard() {
                                 className="absolute bottom-0 left-0 h-0.5 bg-accent/40"
                             />
                             <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-textPrimary/35">{m.label}</span>
-                            <span className={`font-heading text-4xl ${m.color}`}>
+                            <span className={`font-heading text-2xl md:text-4xl ${m.color}`}>
                                 {m.prefix}{val.toLocaleString('en-IN')}{m.suffix}
                             </span>
                         </motion.div>
@@ -101,7 +106,7 @@ export function EfficiencyDashboard() {
                 className="rounded-3xl border border-white/8 bg-secondary/10 overflow-hidden"
             >
                 {/* Panel header */}
-                <div className="flex items-center justify-between px-8 py-4 border-b border-white/5">
+                <div className="flex items-center justify-between px-5 md:px-8 py-3 md:py-4 border-b border-white/5">
                     <div className="flex items-center gap-2">
                         <motion.span
                             animate={{ opacity: [1, 0.3, 1] }}
@@ -121,7 +126,7 @@ export function EfficiencyDashboard() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
-                        className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 px-8 py-5 border-b border-white/4 last:border-0 hover:bg-white/2 transition-colors"
+                        className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 px-5 md:px-8 py-4 md:py-5 border-b border-white/4 last:border-0 hover:bg-white/2 transition-colors"
                     >
                         {/* Route */}
                         <div className="flex-1 flex items-center gap-2 min-w-0">

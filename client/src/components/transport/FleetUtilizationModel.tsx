@@ -37,16 +37,22 @@ const stats = [
 
 export function FleetUtilizationModel() {
     return (
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
+        <section className="py-16 md:py-20 px-5 md:px-12 max-w-7xl mx-auto w-full">
+            {/* Mobile tag */}
+            <div className="md:hidden flex items-center gap-2 mb-4">
+                <Layers size={12} className="text-accent" />
+                <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">Capital Flow</span>
+            </div>
+
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.7 }}
-                className="flex flex-col md:flex-row justify-between items-end mb-14 gap-8"
+                className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-14 gap-5 md:gap-8"
             >
-                <h2 className="font-heading text-[clamp(36px,5vw,72px)] leading-[0.9] text-textPrimary">
+                <h2 className="font-heading text-[2rem] md:text-[clamp(36px,5vw,72px)] leading-[0.95] md:leading-[0.9] text-textPrimary">
                     Fleet utilisation<br />
                     <span className="text-accent">model.</span>
                 </h2>
@@ -55,8 +61,34 @@ export function FleetUtilizationModel() {
                 </p>
             </motion.div>
 
-            {/* Flow */}
-            <div className="flex flex-col md:flex-row items-center gap-4 mb-14">
+            {/* Mobile flow — vertical compact list */}
+            <div className="md:hidden mb-10 relative">
+                <div className="absolute left-[43px] top-10 bottom-10 w-px -translate-x-1/2 bg-gradient-to-b from-accent/40 via-white/10 to-accent/40 pointer-events-none -z-10" />
+                <div className="flex flex-col gap-3">
+                    {flow.map((node, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.45, delay: i * 0.08 }}
+                            className={`relative flex items-center gap-4 p-4 rounded-2xl border ${node.color}`}
+                        >
+                            <div className="w-14 h-14 shrink-0 rounded-xl bg-background/40 border border-white/10 flex items-center justify-center">
+                                <node.icon size={20} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="font-heading text-base uppercase tracking-wide leading-none mb-1">{node.label}</div>
+                                <div className="text-[11px] opacity-55 leading-snug">{node.sub}</div>
+                            </div>
+                            <span className="font-mono text-[10px] opacity-40">0{i + 1}</span>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Desktop Flow */}
+            <div className="hidden md:flex flex-col md:flex-row items-center gap-4 mb-14">
                 {flow.map((node, i) => (
                     <div key={i} className="flex md:flex-col flex-row items-center flex-1 w-full gap-4">
                         <motion.div
@@ -98,7 +130,7 @@ export function FleetUtilizationModel() {
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
                 {stats.map((s, i) => (
                     <motion.div
                         key={i}
@@ -106,10 +138,10 @@ export function FleetUtilizationModel() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: i * 0.1 }}
-                        className="p-6 rounded-2xl border border-white/8 bg-secondary/15 flex flex-col gap-2"
+                        className="p-4 md:p-6 rounded-2xl border border-white/8 bg-secondary/15 flex flex-col gap-1.5 md:gap-2"
                     >
-                        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-textPrimary/35">{s.label}</span>
-                        <span className="font-heading text-2xl text-accent">{s.value}</span>
+                        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-textPrimary/35 leading-tight">{s.label}</span>
+                        <span className="font-heading text-xl md:text-2xl text-accent">{s.value}</span>
                     </motion.div>
                 ))}
             </div>

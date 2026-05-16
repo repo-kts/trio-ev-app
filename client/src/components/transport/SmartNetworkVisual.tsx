@@ -73,9 +73,14 @@ function Car({ pathId, duration, delay, reverse }: {
 
 export function SmartNetworkVisual() {
     return (
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
-            <div className="flex flex-col items-center text-center mb-14 gap-4">
-                <h2 className="text-3xl md:text-4xl font-bold uppercase">
+        <section id="corporate-mobility-network" className="py-16 md:py-20 px-5 md:px-12 max-w-7xl mx-auto w-full">
+            {/* Mobile tag */}
+            <div className="md:hidden flex items-center gap-2 mb-4 justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">Live Network</span>
+            </div>
+            <div className="flex flex-col items-center text-center mb-10 md:mb-14 gap-3 md:gap-4">
+                <h2 className="font-heading text-[2rem] md:text-3xl lg:text-4xl font-bold uppercase leading-[0.95]">
                     Corporate <span className="text-accent">Mobility Network</span>
                 </h2>
                 <p className="text-textPrimary/55 max-w-lg text-sm leading-relaxed">
@@ -83,7 +88,7 @@ export function SmartNetworkVisual() {
                 </p>
             </div>
 
-            <div className="relative w-full bg-secondary/10 rounded-[3rem] border border-white/5 overflow-hidden shadow-2xl">
+            <div className="relative w-full bg-secondary/10 rounded-[1.75rem] md:rounded-[3rem] border border-white/5 overflow-hidden shadow-2xl">
                 {/* Dot-grid background */}
                 <div
                     className="absolute inset-0 opacity-[0.1] pointer-events-none"
@@ -178,7 +183,7 @@ export function SmartNetworkVisual() {
                 </svg>
 
                 {/* ── Status overlay ── */}
-                <div className="absolute top-3 left-3 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-xl border border-white/8 z-40">
+                <div className="hidden md:block absolute top-3 left-3 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-xl border border-white/8 z-40">
                     <div className="flex items-center gap-1.5 mb-2">
                         <motion.span
                             animate={{ opacity: [1, 0.3, 1] }}

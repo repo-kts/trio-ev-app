@@ -3,7 +3,6 @@ import { BatteryCharging, Zap, MapPin } from 'lucide-react';
 import { useRef } from 'react';
 
 export function HeroSection() {
-    const text = "Cities Move Electric".split(" ");
     const ref = useRef(null);
     const { scrollYProgress } = useScroll({
         target: ref,

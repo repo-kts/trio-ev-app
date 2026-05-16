@@ -3,17 +3,121 @@ import { Activity, Clock, Zap, Target } from 'lucide-react';
 
 export function AdminDashboardSim() {
     return (
-        <section className="py-24 px-6 md:px-12 bg-secondary/5 border-y border-white/5 relative overflow-hidden">
+        <section className="py-16 md:py-24 px-5 md:px-12 bg-secondary/5 border-y border-white/5 relative overflow-hidden">
             {/* Background Decorative Element */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative z-10">
-                <div className="text-center mb-24">
-                    <h2 className="text-3xl md:text-5xl font-heading uppercase mb-4 tracking-tighter">System <span className="text-accent">Orchestration</span></h2>
-                    <p className="text-textPrimary/40 max-w-xl mx-auto text-sm">Real-time telemetry and predictive analytics for your entire corporate fleet.</p>
+                {/* Mobile tag */}
+                <div className="md:hidden flex items-center gap-2 mb-4 justify-center">
+                    <Activity size={12} className="text-accent" />
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">Orchestration</span>
+                </div>
+                <div className="text-center mb-12 md:mb-24">
+                    <h2 className="font-heading text-[2rem] md:text-5xl uppercase mb-3 md:mb-4 tracking-tight md:tracking-tighter leading-[0.95]">System <span className="text-accent">Orchestration</span></h2>
+                    <p className="text-textPrimary/40 max-w-xl mx-auto text-sm px-2">Real-time telemetry and predictive analytics for your entire corporate fleet.</p>
                 </div>
 
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
+                {/* Mobile compact dashboard */}
+                <div className="md:hidden space-y-4">
+                    {/* Hero metric card */}
+                    <div className="relative p-6 rounded-3xl bg-secondary/30 border border-white/10 overflow-hidden">
+
+                        {/* EV battery sticker — top right */}
+                        <div className="absolute top-5 right-5 flex flex-col items-end gap-1.5">
+                            {/* Mini battery with animated fill */}
+                            <div className="relative flex items-center">
+                                <div className="relative w-12 h-6 rounded-[5px] border-[1.5px] border-accent/60 p-[2px] overflow-hidden bg-black/30">
+                                    <motion.div
+                                        initial={{ width: '20%' }}
+                                        animate={{ width: ['20%', '100%', '20%'] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                        className="h-full rounded-[2px] bg-gradient-to-r from-accent/70 to-accent"
+                                    />
+                                    <motion.span
+                                        animate={{ opacity: [0.5, 1, 0.5] }}
+                                        transition={{ duration: 1.2, repeat: Infinity }}
+                                        className="absolute inset-0 flex items-center justify-center text-background"
+                                    >
+                                        <Zap size={11} fill="currentColor" />
+                                    </motion.span>
+                                </div>
+                                {/* Battery tip */}
+                                <div className="w-[3px] h-2.5 rounded-r-sm bg-accent/60" />
+                            </div>
+                            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-accent/70">Charging</span>
+                        </div>
+
+                        <div className="relative">
+                            <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent mb-2">Fleet Utility</div>
+                            <div className="font-heading text-6xl font-bold tracking-tighter leading-none">96.4<span className="text-2xl opacity-40">%</span></div>
+                            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
+                                <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                <span className="text-[9px] font-bold uppercase text-accent tracking-widest">Optimized</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Stats grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="p-5 rounded-2xl bg-secondary/30 border border-white/10">
+                            <Activity className="text-accent mb-3" size={18} />
+                            <div className="font-heading text-2xl font-bold">84</div>
+                            <div className="text-[9px] font-bold uppercase text-textPrimary/40 tracking-widest mt-1">Active</div>
+                        </div>
+                        <div className="p-5 rounded-2xl bg-secondary/30 border border-white/10">
+                            <Target className="text-blue-400 mb-3" size={18} />
+                            <div className="font-heading text-2xl font-bold">1,240</div>
+                            <div className="text-[9px] font-bold uppercase text-textPrimary/40 tracking-widest mt-1">Trips</div>
+                        </div>
+                        <div className="p-5 rounded-2xl bg-secondary/30 border border-white/10">
+                            <Clock className="text-purple-400 mb-3" size={18} />
+                            <div className="font-heading text-2xl font-bold">4.2m</div>
+                            <div className="text-[9px] font-bold uppercase text-textPrimary/40 tracking-widest mt-1">Avg Response</div>
+                            <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} viewport={{ once: true }} className="h-full bg-purple-400" />
+                            </div>
+                        </div>
+                        <div className="p-5 rounded-2xl bg-secondary/30 border border-white/10">
+                            <Zap className="text-yellow-400 mb-3" size={18} />
+                            <div className="font-heading text-2xl font-bold">-32%</div>
+                            <div className="text-[9px] font-bold uppercase text-textPrimary/40 tracking-widest mt-1">Energy</div>
+                            <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                <motion.div initial={{ width: 0 }} whileInView={{ width: '65%' }} viewport={{ once: true }} className="h-full bg-yellow-400" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mini bar chart */}
+                    <div className="p-5 rounded-3xl bg-background border border-white/10">
+                        <div className="flex items-center justify-between mb-5">
+                            <div>
+                                <div className="text-[10px] font-bold uppercase text-accent tracking-[0.2em]">System Load</div>
+                                <div className="text-[10px] text-textPrimary/40 mt-0.5">AI Pathfinding</div>
+                            </div>
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-accent/10 border border-accent/20 text-accent text-[8px] font-bold">
+                                <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                                LIVE
+                            </div>
+                        </div>
+                        <div className="h-[80px] flex items-end gap-1.5">
+                            {[30, 45, 35, 55, 70, 60, 85, 95].map((h, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ height: 0 }}
+                                    whileInView={{ height: `${h}%` }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, delay: i * 0.05 }}
+                                    className="flex-1 bg-accent/20 rounded-t-md relative overflow-hidden"
+                                >
+                                    <div className="absolute top-0 left-0 w-full h-0.5 bg-accent" />
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="hidden md:flex flex-col lg:flex-row items-center justify-between gap-16">
                     {/* Main HUD Visual (Left) */}
                     <div className="flex-1 relative w-full max-w-lg aspect-square">
                         <div className="absolute inset-0 rounded-full border border-white/5 bg-secondary/10 flex items-center justify-center">
