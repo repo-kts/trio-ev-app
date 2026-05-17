@@ -1,8 +1,12 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "project-trio-ev",
+      "dependencies": {
+        "nodemailer": "^8.0.7",
+      },
       "devDependencies": {
         "prettier": "^3.3.3",
         "typescript": "^5.6.3",
@@ -119,7 +123,7 @@
         "helmet": "^8.0.0",
         "jsonwebtoken": "^9.0.2",
         "multer": "^1.4.5-lts.1",
-        "nodemailer": "^6.9.16",
+        "nodemailer": "^8.0.7",
         "pino": "^9.5.0",
         "pino-http": "^10.3.0",
         "sharp": "^0.33.5",
@@ -1261,7 +1265,7 @@
 
     "node-releases": ["node-releases@2.0.38", "", {}, "sha512-3qT/88Y3FbH/Kx4szpQQ4HzUbVrHPKTLVpVocKiLfoYvw9XSGOX2FmD2d6DrXbVYyAQTF2HeF6My8jmzx7/CRw=="],
 
-    "nodemailer": ["nodemailer@6.10.1", "", {}, "sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA=="],
+    "nodemailer": ["nodemailer@8.0.7", "", {}, "sha512-pkjE4mkBzQjdJT4/UmlKl3pX0rC9fZmjh7c6C9o7lv66Ac6w9WCnzPzhbPNxwZAzlF4mdq4CSWB5+FbK6FWCow=="],
 
     "normalize-path": ["normalize-path@3.0.0", "", {}, "sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA=="],
 

@@ -48,8 +48,8 @@ export function RentalsHeroBanner() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.4 }}
-                className="relative w-full rounded-3xl overflow-hidden border border-white/5"
-                style={{ height: '420px', background: 'linear-gradient(160deg, #0d1410 0%, #080b09 100%)' }}
+                className="relative w-full rounded-3xl overflow-hidden border border-white/5 h-[340px] sm:h-[420px] flex flex-col"
+                style={{ background: 'linear-gradient(160deg, #0d1410 0%, #080b09 100%)' }}
             >
                 {/* Radial glow — left side only, like headlights from behind */}
                 <div
@@ -58,12 +58,14 @@ export function RentalsHeroBanner() {
                 />
 
                 {/* Top labels row */}
-                <div className="absolute top-5 left-6 flex items-center gap-2 font-sans text-[10px] uppercase tracking-[0.18em] text-accent z-20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                    Weekend fleet · Eastern India
-                </div>
-                <div className="absolute top-5 right-6 font-sans text-[10px] uppercase tracking-[0.14em] text-accent/50 z-20">
-                    Pay for the hours your shift.
+                <div className="absolute top-5 left-6 right-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 z-20">
+                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-accent">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        Weekend fleet · Eastern India
+                    </div>
+                    <div className="text-[10px] uppercase tracking-widest text-accent/50">
+                        Pay for the hours your shift.
+                    </div>
                 </div>
 
                 {/* ── SVG SCENE ── */}
@@ -76,8 +78,7 @@ export function RentalsHeroBanner() {
                 <svg
                     viewBox="0 0 1200 300"
                     preserveAspectRatio="xMidYMax meet"
-                    className="absolute inset-0 w-full"
-                    style={{ top: 0, height: '300px' }}
+                    className="relative flex-1 w-full h-full min-h-0"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     {/* ── ROAD SURFACE ── */}
@@ -85,6 +86,16 @@ export function RentalsHeroBanner() {
                     <rect x="0" y="275" width="1200" height="25" fill="#0f1612" />
                     {/* Road edge highlight */}
                     <line x1="0" y1="276" x2="1200" y2="276" stroke="#1e2d24" strokeWidth="1.5" />
+                    {/* Animated road dashes — give a sense of forward motion */}
+                    <motion.line
+                        x1="0" y1="287" x2="1400" y2="287"
+                        stroke="#5cf09e"
+                        strokeWidth="2"
+                        strokeDasharray="32 28"
+                        opacity="0.35"
+                        animate={{ x1: [0, -60], x2: [1400, 1340] }}
+                        transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
+                    />
 
                     {/* ── ANIMATED EV MINIBUS — matches reference image ── */}
                     <motion.g
@@ -147,50 +158,95 @@ export function RentalsHeroBanner() {
                             {/* ── WHEEL 1 — front-right (cx=378, cy=124) ── */}
                             <circle cx="378" cy="124" r="36" fill="#060908" />
                             <circle cx="378" cy="124" r="28" fill="#0c1410" />
-                            <circle cx="378" cy="124" r="14" fill="#5cf09e" opacity="0.8" />
+                            <g transform="translate(378 124)">
+                                <motion.g
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
+                                >
+                                    <circle r="14" fill="#5cf09e" opacity="0.8" />
+                                    <line x1="0" y1="-14" x2="0" y2="14" stroke="#0c1410" strokeWidth="3" />
+                                    <line x1="-14" y1="0" x2="14" y2="0" stroke="#0c1410" strokeWidth="3" />
+                                </motion.g>
+                            </g>
                             <circle cx="378" cy="124" r="36" fill="none" stroke="#1c2e22" strokeWidth="2.5" />
 
                             {/* ── WHEEL 2 — rear-left (cx=82, cy=124) ── */}
                             <circle cx="82" cy="124" r="36" fill="#060908" />
                             <circle cx="82" cy="124" r="28" fill="#0c1410" />
-                            <circle cx="82" cy="124" r="14" fill="#5cf09e" opacity="0.8" />
+                            <g transform="translate(82 124)">
+                                <motion.g
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
+                                >
+                                    <circle r="14" fill="#5cf09e" opacity="0.8" />
+                                    <line x1="0" y1="-14" x2="0" y2="14" stroke="#0c1410" strokeWidth="3" />
+                                    <line x1="-14" y1="0" x2="14" y2="0" stroke="#0c1410" strokeWidth="3" />
+                                </motion.g>
+                            </g>
                             <circle cx="82" cy="124" r="36" fill="none" stroke="#1c2e22" strokeWidth="2.5" />
 
                         </g>{/* end car group */}
                     </motion.g>{/* end float */}
 
-                    {/* Speed lines behind car — subtle */}
-                    {[0, 1, 2, 3].map((i) => (
+                    {/* Speed lines behind car — punchy */}
+                    {[0, 1, 2, 3, 4, 5].map((i) => (
                         <motion.line
                             key={`speed-${i}`}
-                            x1={340} y1={200 + i * 18}
-                            x2={100} y2={200 + i * 18}
+                            y1={170 + i * 18}
+                            y2={170 + i * 18}
                             stroke="#5cf09e"
-                            strokeWidth={i === 1 ? 1.5 : 1}
+                            strokeWidth={i % 2 === 0 ? 2 : 1.2}
                             strokeLinecap="round"
-                            opacity={0}
-                            animate={{ x1: [340, 200, 340], opacity: [0, 0.18, 0] }}
-                            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+                            animate={{
+                                x1: [400, -50],
+                                x2: [550, 100],
+                                opacity: [0, 0.55, 0],
+                            }}
+                            transition={{
+                                duration: 0.7,
+                                repeat: Infinity,
+                                ease: 'linear',
+                                delay: i * 0.12,
+                            }}
+                        />
+                    ))}
+                    {/* Long fast streaks across full width */}
+                    {[0, 1, 2].map((i) => (
+                        <motion.line
+                            key={`streak-${i}`}
+                            y1={150 + i * 35}
+                            y2={150 + i * 35}
+                            stroke="#5cf09e"
+                            strokeWidth={1}
+                            strokeLinecap="round"
+                            opacity={0.25}
+                            animate={{ x1: [1300, -200], x2: [1500, 0] }}
+                            transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: 'linear',
+                                delay: i * 0.4,
+                            }}
                         />
                     ))}
                 </svg>
 
                 {/* ── STATS STRIP ── clearly separated below the scene */}
                 <div
-                    className="absolute bottom-0 left-0 right-0 z-20"
-                    style={{ background: 'linear-gradient(to top, rgba(8,11,9,0.96) 70%, transparent)' }}
+                    className="relative z-20 shrink-0 border-t border-white/5"
+                    style={{ background: 'rgba(8,11,9,0.96)' }}
                 >
-                    <div className="flex items-end gap-16 px-8 pb-7 pt-10">
+                    <div className="flex items-end gap-6 sm:gap-16 px-5 sm:px-8 pb-5 sm:pb-7 pt-6 sm:pt-10">
                         {[
                             { label: 'Min rental', value: '2 hrs' },
                             { label: 'Max rental', value: '24 hrs' },
                             { label: 'Plans', value: '4' },
                         ].map((stat) => (
                             <div key={stat.label} className="flex flex-col gap-1">
-                                <span className="font-sans text-[10px] uppercase tracking-[0.18em] text-accent/70">
+                                <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-accent/70">
                                     {stat.label}
                                 </span>
-                                <span className="font-heading text-4xl md:text-5xl leading-none text-white">
+                                <span className="text-[24px] sm:text-[32px] md:text-5xl font-bold leading-none text-white">
                                     {stat.value}
                                 </span>
                             </div>

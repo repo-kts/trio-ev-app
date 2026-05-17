@@ -89,13 +89,13 @@ export function Footer() {
     );
 
     return (
-        <footer className="bg-secondary/20 border-t border-secondary/50 pt-16 pb-8 px-6 md:px-12">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
+        <footer className="bg-secondary/20 border-t border-secondary/50 pt-12 sm:pt-16 pb-8 px-5 sm:px-6 md:px-12">
+            <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10 mb-10 sm:mb-12">
 
                 {/* Column 1: Logo & Slogan */}
-                <div className="lg:col-span-1">
+                <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1">
                     <div className="mb-4">
-                        <img src="/logo.png" alt="Trio Logo" className="h-10 w-auto object-contain scale-[2] origin-left" />
+                        <img src="/logo.png" alt="Trio Logo" className="h-9 sm:h-10 w-auto object-contain scale-[1.6] sm:scale-[1.8] lg:scale-[2] origin-left" />
                     </div>
                     <p className="text-accent font-bold text-sm mb-4">Drive Smart. Go Green.</p>
                     <p className="text-textPrimary/50 text-xs leading-relaxed max-w-[220px]">
@@ -144,7 +144,7 @@ export function Footer() {
                 </div>
 
                 {/* Column 4: Registered Address */}
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                     <h4 className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] mb-6 text-accent">Registered Address</h4>
                     <div className="space-y-4 text-[11px] text-textPrimary/60 leading-relaxed">
                         <div className="flex gap-3">
@@ -163,7 +163,7 @@ export function Footer() {
                 </div>
 
                 {/* Column 5: Office Address */}
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                     <h4 className="font-heading font-bold text-[10px] uppercase tracking-[0.2em] mb-6 text-accent">Office Address</h4>
                     <div className="space-y-4 text-[11px] text-textPrimary/60 leading-relaxed">
                         <div className="flex gap-3">
