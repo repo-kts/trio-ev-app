@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/utils/jwt';
 import { conflict, unauthorized } from '@/utils/http-error';
-import type { LoginInput, RegisterInput } from './auth.schema.js';
+import type { ChangePasswordInput, LoginInput, RegisterInput } from './auth.schema.js';
 
 const userSelect = {
     id: true,
@@ -51,6 +51,20 @@ export async function login(input: LoginInput) {
 export async function me(userId: string) {
     return prisma.user.findUniqueOrThrow({
         where: { id: userId },
+        select: userSelect,
+    });
+}
+
+export async function changePassword(userId: string, input: ChangePasswordInput) {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+
+    const ok = await bcrypt.compare(input.currentPassword, user.password);
+    if (!ok) throw unauthorized('Current password is incorrect');
+
+    const password = await bcrypt.hash(input.newPassword, 10);
+    return prisma.user.update({
+        where: { id: userId },
+        data: { password },
         select: userSelect,
     });
 }

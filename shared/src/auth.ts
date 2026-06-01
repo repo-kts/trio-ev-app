@@ -26,6 +26,12 @@ export const registerSchema = z.object({
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
 
+export const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(8).max(200),
+});
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
 export const authResponseSchema = z.object({
     user: userSchema,
     token: z.string().optional(),
