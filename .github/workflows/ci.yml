@@ -1,0 +1,42 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    check:
+        name: Lint + typecheck
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: 1.3.1
+
+            - name: Install deps
+              run: bun install --frozen-lockfile
+
+            # Prisma client must be generated before the server typechecks
+            # (no DB connection needed for `generate`).
+            - name: Generate Prisma client
+              run: bun --cwd server run db:generate
+
+            - name: Lint
+              run: bun run lint
+
+            - name: Typecheck server
+              run: bun --cwd server run typecheck
+
+            - name: Typecheck client
+              run: bun --cwd client run typecheck
+
+            - name: Typecheck admin
+              run: bun --cwd admin run typecheck

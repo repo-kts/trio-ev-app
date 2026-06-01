@@ -1,0 +1,100 @@
+name: Deploy
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+# One deploy at a time; let an in-flight deploy finish (don't cancel mid-rollout).
+concurrency:
+    group: deploy-production
+    cancel-in-progress: false
+
+env:
+    BUN_VERSION: 1.3.1
+
+jobs:
+    # ──────────────────────────────────────────────────────────────
+    # Frontends → S3 + CloudFront
+    # ──────────────────────────────────────────────────────────────
+    frontends:
+        name: Deploy ${{ matrix.app }} → S3
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                app: [client, admin]
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: ${{ env.BUN_VERSION }}
+
+            - name: Install deps
+              run: bun install --frozen-lockfile
+
+            # VITE_API_URL is baked into the bundle at build time.
+            - name: Build ${{ matrix.app }}
+              env:
+                  VITE_API_URL: ${{ secrets.VITE_API_URL }}
+              run: bun --cwd ${{ matrix.app }} run build
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Sync to S3
+              env:
+                  BUCKET: ${{ matrix.app == 'client' && secrets.S3_CLIENT_BUCKET || secrets.S3_ADMIN_BUCKET }}
+              run: |
+                  # Hashed assets: long cache. index.html + others: no-cache so new deploys are seen.
+                  aws s3 sync ${{ matrix.app }}/dist "s3://$BUCKET" \
+                      --delete \
+                      --cache-control "public,max-age=31536000,immutable" \
+                      --exclude "index.html" \
+                      --exclude "*.map"
+                  aws s3 cp ${{ matrix.app }}/dist/index.html "s3://$BUCKET/index.html" \
+                      --cache-control "no-cache"
+
+            - name: Invalidate CloudFront
+              env:
+                  DIST_ID: ${{ matrix.app == 'client' && secrets.CLOUDFRONT_CLIENT_ID || secrets.CLOUDFRONT_ADMIN_ID }}
+              run: |
+                  aws cloudfront create-invalidation \
+                      --distribution-id "$DIST_ID" \
+                      --paths "/*"
+
+    # ──────────────────────────────────────────────────────────────
+    # Server deploy → EC2 (git pull, migrate, restart systemd unit)
+    # Server runs as the `trio-server` systemd service on the box; the
+    # repo is already cloned with bun installed. We pull main, install
+    # deps, run migrations, then restart the unit.
+    # ──────────────────────────────────────────────────────────────
+    server-deploy:
+        name: Deploy server → EC2
+        runs-on: ubuntu-latest
+        steps:
+            - name: Pull, migrate, restart
+              uses: appleboy/ssh-action@v1.2.0
+              env:
+                  SHA: ${{ github.sha }}
+                  APP_DIR: ${{ secrets.EC2_APP_DIR }}
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USER }}
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  envs: SHA,APP_DIR
+                  script: |
+                      set -euo pipefail
+                      cd "${APP_DIR:-$HOME/trio-ev-app}"
+                      git fetch --all --prune
+                      git reset --hard "$SHA"
+                      bun install --frozen-lockfile
+                      bun --cwd server run db:generate
+                      ( cd server && bunx prisma migrate deploy )
+                      sudo systemctl restart trio-server
+                      sudo systemctl --no-pager status trio-server | head -n 5
