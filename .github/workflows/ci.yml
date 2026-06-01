@@ -27,16 +27,16 @@ jobs:
             # Prisma client must be generated before the server typechecks
             # (no DB connection needed for `generate`).
             - name: Generate Prisma client
-              run: bun --cwd server run db:generate
+              run: bun run --cwd server db:generate
 
             - name: Lint
               run: bun run lint
 
             - name: Typecheck server
-              run: bun --cwd server run typecheck
+              run: bun run --cwd server typecheck
 
             - name: Typecheck client
-              run: bun --cwd client run typecheck
+              run: bun run --cwd client typecheck
 
             - name: Typecheck admin
-              run: bun --cwd admin run typecheck
+              run: bun run --cwd admin typecheck

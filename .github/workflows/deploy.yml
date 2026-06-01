@@ -38,7 +38,7 @@ jobs:
             - name: Build ${{ matrix.app }}
               env:
                   VITE_API_URL: ${{ secrets.VITE_API_URL }}
-              run: bun --cwd ${{ matrix.app }} run build
+              run: bun run --cwd ${{ matrix.app }} build
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
@@ -90,11 +90,14 @@ jobs:
                   envs: SHA,APP_DIR
                   script: |
                       set -euo pipefail
+                      # Non-interactive SSH shell: put bun on PATH.
+                      export BUN_INSTALL="$HOME/.bun"
+                      export PATH="$BUN_INSTALL/bin:$PATH"
                       cd "${APP_DIR:-$HOME/trio-ev-app}"
                       git fetch --all --prune
                       git reset --hard "$SHA"
                       bun install --frozen-lockfile
-                      bun --cwd server run db:generate
+                      bun run --cwd server db:generate
                       ( cd server && bunx prisma migrate deploy )
                       sudo systemctl restart trio-server
                       sudo systemctl --no-pager status trio-server | head -n 5
