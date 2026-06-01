@@ -3,15 +3,15 @@
 Two GitHub Actions workflows:
 
 - **`.github/workflows/ci.yml`** — runs on every PR + push to `main`. Lint + typecheck (server, client, admin). Gate; no deploy.
-- **`.github/workflows/deploy.yml`** — runs on push to `main` (and manual `workflow_dispatch`). Three jobs:
+- **`.github/workflows/deploy.yml`** — runs on push to `main` (and manual `workflow_dispatch`). Two jobs:
     - `frontends` — builds `client/` + `admin/` (`VITE_API_URL` baked in), syncs `dist/` to S3, invalidates CloudFront.
-    - `server-image` — builds the server prod image, pushes to GHCR (`ghcr.io/<owner>/trio-server:<sha>` + `:latest`).
-    - `server-deploy` — copies `docker-compose.ec2.yml` to EC2, then SSHes in to `pull → migrate deploy → up`.
+    - `server-deploy` — SSHes into EC2: `git reset --hard <sha>` → `bun install` → `prisma migrate deploy` → `systemctl restart trio-server`.
 
 ```
-client/dist ─┐                         ┌─ ghcr.io/<owner>/trio-server ─┐
-admin/dist  ─┤→ S3 → CloudFront        │                              ↓
-             └─ (static SPA)           └─ build/push ──────────→ EC2 (docker compose: server + db)
+client/dist ─┐
+admin/dist  ─┤→ S3 → CloudFront   (static SPA)
+             │
+server ──────┴─ EC2: git pull + migrate + `systemctl restart trio-server` (bun, no Docker)
 media → s3://<media bucket>  (runtime, server/src/lib/storage.ts — unchanged)
 ```
 
@@ -29,16 +29,16 @@ Settings → Secrets and variables → Actions.
 | `CLOUDFRONT_CLIENT_ID` / `CLOUDFRONT_ADMIN_ID` | CloudFront distribution IDs in front of those buckets |
 | `VITE_API_URL` | public URL of the server on EC2 (e.g. `https://api.example.com`) — baked into both bundles |
 
-### Server (EC2 + GHCR)
+### Server (EC2, systemd)
 
 | Secret | What |
 | --- | --- |
 | `EC2_HOST` | public DNS / IP of the EC2 box |
-| `EC2_USER` | SSH user (e.g. `ubuntu`, `ec2-user`) |
+| `EC2_USER` | SSH user (e.g. `ubuntu`, `ec2-user`) — must own the cloned repo |
 | `EC2_SSH_KEY` | private key (PEM) for that user |
-| `GHCR_PAT` | PAT with `read:packages` so EC2 can pull the private image (skip if you make the GHCR package public) |
+| `EC2_APP_DIR` | absolute path of the cloned repo on the box (optional; defaults to `$HOME/trio-ev-app`) |
 
-Image push uses the built-in `GITHUB_TOKEN` — no secret needed for that.
+No registry — the server runs straight from source via bun under the `trio-server` systemd unit.
 
 ## One-time S3 + CloudFront setup (per frontend)
 
@@ -49,15 +49,12 @@ Image push uses the built-in `GITHUB_TOKEN` — no secret needed for that.
 
 ## One-time EC2 setup
 
-1. Install Docker + the compose plugin.
-2. `mkdir ~/trio` — the workflow drops `docker-compose.ec2.yml` here.
-3. Create `~/trio/.env` (chmod 600, **never committed**) with:
+Repo already cloned + bun installed. Remaining wiring:
+
+1. **`.env`** in `server/` (chmod 600, **never committed**) — the runtime config the unit loads:
 
     ```env
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=<strong>
-    POSTGRES_DB=trio
-    DATABASE_URL=postgresql://postgres:<strong>@db:5432/trio?schema=public
+    DATABASE_URL=postgresql://postgres:<strong>@localhost:5432/trio?schema=public
     JWT_SECRET=<>=16 chars>
     JWT_EXPIRES_IN=7d
     # CloudFront domains of the two SPAs, comma-separated
@@ -70,11 +67,43 @@ Image push uses the built-in `GITHUB_TOKEN` — no secret needed for that.
     S3_FORCE_PATH_STYLE=false
     ```
 
-   `db` resolves on the compose network — keep `@db:5432` (not localhost). For managed Postgres (RDS) instead, point `DATABASE_URL` at it and drop the `db` service.
+   Postgres is local (RDS or a host package) — point `DATABASE_URL` at it.
+
+2. **systemd unit** `/etc/systemd/system/trio-server.service`:
+
+    ```ini
+    [Unit]
+    Description=Trio API server
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=<EC2_USER>
+    WorkingDirectory=/home/<EC2_USER>/trio-ev-app/server
+    EnvironmentFile=/home/<EC2_USER>/trio-ev-app/server/.env
+    Environment=NODE_ENV=production
+    Environment=PORT=8001
+    ExecStart=/home/<EC2_USER>/.bun/bin/bun src/index.ts
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+    `sudo systemctl daemon-reload && sudo systemctl enable --now trio-server`.
+
+3. **Passwordless restart** — the deploy SSHes as `EC2_USER` and runs `sudo systemctl restart trio-server`. Grant exactly that via a sudoers drop-in (`sudo visudo -f /etc/sudoers.d/trio`):
+
+    ```
+    <EC2_USER> ALL=(root) NOPASSWD: /bin/systemctl restart trio-server, /bin/systemctl status trio-server
+    ```
+
+   (Or set `User=<EC2_USER>` on the unit and drop `sudo` from the workflow if it can manage its own user service.)
+
 4. Put TLS in front of `:8001` (nginx/Caddy reverse proxy or an ALB) so `VITE_API_URL` can be `https://…`.
 
 ## Notes
 
-- The prod server image bundles the Prisma CLI, so `bunx prisma migrate deploy` runs inside the container on EC2 — no Prisma install on the host.
-- Rollback: re-run the deploy on an older commit, or on EC2 set `IMAGE_TAG=<old sha>` and re-run the compose `pull && up -d`.
-- `docker-compose.prod.yml` (all three services on one box) still exists for a single-box deploy; the EC2 split here supersedes it for production.
+- Deploy is `git reset --hard <sha>` — local edits on the box are wiped. Keep config only in `server/.env`, never in tracked files.
+- Rollback: re-run the deploy workflow on an older commit (manual `workflow_dispatch` from that SHA), or on the box `git reset --hard <old sha> && sudo systemctl restart trio-server`.
+- `docker-compose.prod.yml` (all three services in containers on one box) still exists as an alternative single-box deploy.
