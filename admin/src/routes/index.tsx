@@ -6,6 +6,7 @@ import { AdminShell } from '@/components/layout/AdminShell';
 import { AuthGuard } from '@/features/auth/AuthGuard';
 
 const Login = lazy(() => import('@/features/auth/pages/Login'));
+const ChangePassword = lazy(() => import('@/features/auth/pages/ChangePassword'));
 const Overview = lazy(() => import('@/features/dashboard/pages/Overview'));
 const InquiryList = lazy(() => import('@/features/inquiry/pages/InquiryList'));
 const PostList = lazy(() => import('@/features/blog/pages/PostList'));
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
             { path: 'notice', element: withSuspense(<NoticeManager />) },
             { path: 'stations', element: withSuspense(<StationsManager />) },
             { path: 'settings', element: withSuspense(<SettingsManager />) },
+            { path: 'change-password', element: withSuspense(<ChangePassword />) },
             { path: '*', element: <Navigate to="/overview" replace /> },
         ],
     },

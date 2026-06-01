@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import * as authService from './auth.service.js';
-import type { LoginInput, RegisterInput } from './auth.schema.js';
+import type { ChangePasswordInput, LoginInput, RegisterInput } from './auth.schema.js';
 import { ADMIN_SESSION_COOKIE } from '@/middleware/auth';
 import { env } from '@/config/env';
 
@@ -56,6 +56,19 @@ export const loginHandler: RequestHandler<unknown, unknown, LoginInput> = async 
 export const meHandler: RequestHandler = async (req, res, next) => {
     try {
         res.json(await authService.me(req.user!.sub));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const changePasswordHandler: RequestHandler<unknown, unknown, ChangePasswordInput> = async (
+    req,
+    res,
+    next,
+) => {
+    try {
+        const user = await authService.changePassword(req.user!.sub, req.body);
+        res.json(user);
     } catch (err) {
         next(err);
     }

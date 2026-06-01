@@ -1,4 +1,4 @@
-import { ChevronDown, LogOut, Menu } from 'lucide-react';
+import { ChevronDown, KeyRound, LogOut, Menu } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -93,6 +93,17 @@ export function Topbar({ onOpenSidebar }: Props = {}) {
                                 <p className="truncate text-xs text-slate-500">{me.data.email}</p>
                             )}
                         </div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setOpen(false);
+                                nav('/change-password');
+                            }}
+                            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50"
+                        >
+                            <KeyRound className="h-4 w-4 text-slate-500" />
+                            Change password
+                        </button>
                         <button
                             type="button"
                             onClick={() => logoutMutation.mutate()}

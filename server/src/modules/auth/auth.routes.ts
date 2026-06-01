@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { validate } from '@/middleware/validate';
 import { requireAuth } from '@/middleware/auth';
-import { issueCsrfToken } from '@/middleware/csrf';
-import { loginSchema, registerSchema } from './auth.schema.js';
+import { issueCsrfToken, requireCsrf } from '@/middleware/csrf';
+import { changePasswordSchema, loginSchema, registerSchema } from './auth.schema.js';
 import {
+    changePasswordHandler,
     csrfHandler,
     loginHandler,
     logoutHandler,
@@ -18,3 +19,10 @@ authRouter.post('/register', validate(registerSchema), registerHandler);
 authRouter.post('/login', validate(loginSchema), loginHandler);
 authRouter.post('/logout', logoutHandler);
 authRouter.get('/me', requireAuth, meHandler);
+authRouter.post(
+    '/change-password',
+    requireAuth,
+    requireCsrf,
+    validate(changePasswordSchema),
+    changePasswordHandler,
+);
