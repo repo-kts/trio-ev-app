@@ -1,8 +1,8 @@
 import { ChevronDown, KeyRound, LogOut, Menu } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { useMe } from '@/features/auth/hooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMe, ME_QUERY_KEY } from '@/features/auth/hooks';
 import { logout } from '@/features/auth/api';
 import { toast } from '@/hooks/useToast';
 import { cn } from '@/lib/cn';
@@ -14,6 +14,7 @@ interface Props {
 export function Topbar({ onOpenSidebar }: Props = {}) {
     const me = useMe();
     const nav = useNavigate();
+    const qc = useQueryClient();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -36,6 +37,10 @@ export function Topbar({ onOpenSidebar }: Props = {}) {
     const logoutMutation = useMutation({
         mutationFn: logout,
         onSuccess: () => {
+            // Drop the cached `me` so AuthGuard/Login don't treat us as still-ADMIN
+            // (otherwise Login bounces straight back to /overview).
+            qc.setQueryData(ME_QUERY_KEY, null);
+            qc.removeQueries({ queryKey: ME_QUERY_KEY });
             toast.success('Signed out');
             nav('/login', { replace: true });
         },
